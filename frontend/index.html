@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXURY BAGS | Premium Handcrafted Collection</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="welcome-message" id="welcomeMessage">
+            <i class="fas fa-crown"></i> Welcome to Luxury Bags
+        </div>
+        <div class="auth-links">
+            <a href="login.html" class="login-link"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+            <a href="login.html?tab=register" class="register-link"><i class="fas fa-user-plus"></i> Register</a>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">LUXURY BAGS</a>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="products.html">Collection</a>
+            <a href="dashboard.html" class="profile-link" style="display: none;">Dashboard</a>
+            <a href="#" class="logout-link" style="display: none;" onclick="logout()">Logout</a>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=1600&auto=format" alt="Luxury Bags Collection">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h1>
+                <span>Timeless Elegance</span>
+                Luxury Redefined
+            </h1>
+            <p>Discover our exclusive collection of handcrafted premium leather bags, designed for the modern connoisseur who appreciates the finest things in life.</p>
+            <a href="products.html" class="btn btn-primary btn-large">Explore Collection <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <div class="container">
+        <div class="section-header text-center" style="margin: 4rem 0 2rem;">
+            <h2>Featured Collection</h2>
+            <p class="text-secondary">Discover our most exclusive luxury bags</p>
+        </div>
+        
+        <div class="products-grid" id="featuredProducts">
+            <!-- Products loaded via JavaScript -->
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section style="padding: 4rem 0;">
+        <div class="container">
+            <div class="section-header text-center" style="margin-bottom: 3rem;">
+                <h2>The Luxury Experience</h2>
+                <p class="text-secondary">Every detail crafted to perfection</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                <div class="product-card" style="text-align: center; padding: 3rem 2rem;">
+                    <div style="font-size: 3rem; color: var(--accent-gold); margin-bottom: 1.5rem;">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 1rem;">Premium Quality</h3>
+                    <p style="color: var(--text-secondary);">Handcrafted with the finest Italian leather by master artisans</p>
+                </div>
+
+                <div class="product-card" style="text-align: center; padding: 3rem 2rem;">
+                    <div style="font-size: 3rem; color: var(--accent-gold); margin-bottom: 1.5rem;">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 1rem;">Complimentary Shipping</h3>
+                    <p style="color: var(--text-secondary);">Free worldwide shipping on all orders over $500</p>
+                </div>
+
+                <div class="product-card" style="text-align: center; padding: 3rem 2rem;">
+                    <div style="font-size: 3rem; color: var(--accent-gold); margin-bottom: 1.5rem;">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 1rem;">30-Day Returns</h3>
+                    <p style="color: var(--text-secondary);">Hassle-free returns and exchanges, because you deserve perfection</p>
+                </div>
+
+                <div class="product-card" style="text-align: center; padding: 3rem 2rem;">
+                    <div style="font-size: 3rem; color: var(--accent-gold); margin-bottom: 1.5rem;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 1rem;">Secure Shopping</h3>
+                    <p style="color: var(--text-secondary);">256-bit SSL encrypted checkout for your peace of mind</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>LUXURY BAGS</h3>
+                <p>Redefining elegance since 2010. Each piece is crafted with passion and precision by master artisans.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="products.html">New Arrivals</a></li>
+                    <li><a href="products.html?filter=bestsellers">Best Sellers</a></li>
+                    <li><a href="products.html?filter=limited">Limited Edition</a></li>
+                    <li><a href="products.html?filter=gift">Gift Cards</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Newsletter</h3>
+                <p>Subscribe for exclusive offers</p>
+                <form style="display: flex; gap: 0.5rem; margin-top: 1rem;" onsubmit="event.preventDefault(); utils.showNotification('Newsletter feature coming soon!', 'info');">
+                    <input type="email" placeholder="Your email" style="flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); border-radius: var(--radius-full); color: var(--text-primary);">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LUXURY BAGS. All rights reserved. Crafted with excellence in Italy.</p>
+        </div>
+    </footer>
+
+    <!-- Loading Spinner -->
+    <div class="spinner" id="loadingSpinner" style="display: none;"></div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // 15 Featured Products with reliable image links
+        const featuredProducts = [
+            {
+                id: 1,
+                name: "Italian Leather Tote",
+                category: "Leather Collection",
+                price: 899,
+                old_price: 1299,
+                image: "https://images.unsplash.com/photo-1584917865448-de89fe76cc2b?w=600&auto=format",
+                badge: "BEST SELLER",
+                rating: 5,
+                description: "Handcrafted in Florence with premium Italian leather."
+            },
+            {
+                id: 2,
+                name: "Vintage Leather Satchel",
+                category: "Leather Collection",
+                price: 749,
+                old_price: 999,
+                image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format",
+                badge: "SALE",
+                rating: 4,
+                description: "Classic vintage design with solid brass hardware."
+            },
+            {
+                id: 3,
+                name: "Oxford Leather Briefcase",
+                category: "Business",
+                price: 1299,
+                old_price: 1699,
+                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
+                badge: "PREMIUM",
+                rating: 5,
+                description: "Professional elegance with padded laptop compartment."
+            },
+            {
+                id: 4,
+                name: "Evening Crystal Clutch",
+                category: "Evening",
+                price: 1299,
+                old_price: 1899,
+                image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&auto=format",
+                badge: "LUXURY",
+                rating: 5,
+                description: "Hand-set with Swarovski crystals for special occasions."
+            },
+            {
+                id: 5,
+                name: "Designer Shoulder Bag",
+                category: "Handbags",
+                price: 1599,
+                old_price: 2199,
+                image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&auto=format",
+                badge: "EXCLUSIVE",
+                rating: 5,
+                description: "Signature gold hardware and multiple compartments."
+            },
+            {
+                id: 6,
+                name: "Quilted Chain Handbag",
+                category: "Handbags",
+                price: 1899,
+                old_price: 2499,
+                image: "https://images.unsplash.com/photo-1584917865448-de89fe76cc2b?w=600&auto=format",
+                badge: "SIGNATURE",
+                rating: 5,
+                description: "Diamond stitching and signature chain strap."
+            },
+            {
+                id: 7,
+                name: "Structured Top Handle Bag",
+                category: "Handbags",
+                price: 999,
+                old_price: 1399,
+                image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format",
+                badge: "NEW",
+                rating: 4,
+                description: "Premium calfskin leather with rigid top handle."
+            },
+            {
+                id: 8,
+                name: "Convertible Hobo Bag",
+                category: "Handbags",
+                price: 699,
+                old_price: 949,
+                image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&auto=format",
+                badge: "VERSATILE",
+                rating: 5,
+                description: "Wear as shoulder bag, crossbody, or clutch."
+            },
+            {
+                id: 9,
+                name: "Mini Chain Crossbody",
+                category: "Handbags",
+                price: 449,
+                old_price: 599,
+                image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&auto=format",
+                badge: "TRENDING",
+                rating: 4,
+                description: "Mini crossbody with detachable chain strap."
+            },
+            {
+                id: 10,
+                name: "Premium Travel Backpack",
+                category: "Backpacks",
+                price: 599,
+                old_price: 799,
+                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
+                badge: "TRAVEL PRO",
+                rating: 5,
+                description: "USB charging port and RFID-blocking pockets."
+            },
+            {
+                id: 11,
+                name: "Laptop Backpack",
+                category: "Backpacks",
+                price: 399,
+                old_price: 549,
+                image: "https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format",
+                badge: "BEST SELLER",
+                rating: 5,
+                description: "Padded compartment for up to 15-inch laptops."
+            },
+            {
+                id: 12,
+                name: "Canvas Backpack",
+                category: "Backpacks",
+                price: 299,
+                old_price: 399,
+                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
+                badge: "CASUAL",
+                rating: 4,
+                description: "Heavy-duty waxed canvas with leather accents."
+            },
+            {
+                id: 13,
+                name: "Vintage Leather Backpack",
+                category: "Backpacks",
+                price: 699,
+                old_price: 899,
+                image: "https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format",
+                badge: "PREMIUM",
+                rating: 5,
+                description: "Full-grain leather that develops beautiful patina."
+            },
+            {
+                id: 14,
+                name: "Weekender Duffle Bag",
+                category: "Travel",
+                price: 1099,
+                old_price: 1499,
+                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
+                badge: "LIMITED",
+                rating: 5,
+                description: "Water-resistant leather with multiple compartments."
+            },
+            {
+                id: 15,
+                name: "Leather Crossbody Bag",
+                category: "Handbags",
+                price: 449,
+                old_price: 599,
+                image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&auto=format",
+                badge: "POPULAR",
+                rating: 5,
+                description: "Soft, supple leather with adjustable strap."
+            }
+        ];
+
+        // Display featured products
+        document.addEventListener('DOMContentLoaded', () => {
+            const featuredContainer = document.getElementById('featuredProducts');
+            if (featuredContainer) {
+                featuredContainer.innerHTML = featuredProducts.map(product => `
+                    <div class="product-card">
+                        <div class="product-image-container">
+                            <img src="${product.image}" alt="${product.name}" class="product-image" onclick="utils.viewProduct(${product.id})" loading="lazy">
+                            ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
+                            <div class="product-overlay">
+                                <button class="overlay-btn" onclick="utils.addToWishlist(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <button class="overlay-btn" onclick="utils.viewProduct(${product.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">${product.category}</div>
+                            <h3 class="product-name" onclick="utils.viewProduct(${product.id})">${product.name}</h3>
+                            <div class="product-rating">
+                                ${Array(5).fill(0).map((_, i) => 
+                                    `<i class="fas fa-star ${i < product.rating ? '' : 'empty'}"></i>`
+                                ).join('')}
+                            </div>
+                            <div class="product-price-row">
+                                <span class="product-price">$${product.price}</span>
+                                ${product.old_price ? `<span class="product-old-price">$${product.old_price}</span>` : ''}
+                            </div>
+                            <p class="product-description">${product.description}</p>
+                            <button class="add-to-cart-btn" onclick="cart.addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                                ADD TO CART
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Update cart count
+            updateCartCount();
+        });
+
+        // Cart count function (if not in main.js)
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = count;
+            });
+        }
+
+        // Add to utils if not exists
+        window.utils = window.utils || {};
+        window.utils.viewProduct = function(productId) {
+            window.location.href = `product-detail.html?id=${productId}`;
+        };
+        
+        window.utils.addToWishlist = function(product) {
+            let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            if (!wishlist.some(item => item.id === product.id)) {
+                wishlist.push(product);
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                showNotification('Added to wishlist!', 'success');
+            } else {
+                showNotification('Already in wishlist!', 'info');
+            }
+        };
+        
+        window.utils.showNotification = function(message, type) {
+            // Simple alert for demo - replace with your notification system
+            alert(message);
+        };
+
+        // Cart functions
+        window.cart = window.cart || {};
+        window.cart.addToCart = function(product) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity = (existingItem.quantity || 1) + 1;
+            } else {
+                cart.push({...product, quantity: 1});
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            showNotification('Added to cart!', 'success');
+        };
+
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Add notification styles if not exists
+        const style = document.createElement('style');
+        style.textContent = `
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: var(--gradient-card);
+                border: 2px solid var(--accent-gold);
+                border-radius: var(--radius-lg);
+                color: var(--text-primary);
+                box-shadow: var(--shadow-gold);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                animation: slideIn 0.3s ease;
+            }
+            
+            .notification-success {
+                border-color: var(--success);
+            }
+            
+            .notification-info {
+                border-color: var(--accent-gold);
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

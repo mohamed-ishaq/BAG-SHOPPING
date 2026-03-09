@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Luxury Bags</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">LUXURY BAGS</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Collection</a>
+            <a href="login.html" class="login-link">Sign In</a>
+            <a href="#" class="logout-link" style="display: none;" onclick="logout()">Logout</a>
+            <a href="dashboard.html" class="profile-link" style="display: none;">Dashboard</a>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="cart-page">
+        <div class="container">
+            <div class="cart-header">
+                <h1>Shopping Cart</h1>
+                <p>Review and manage your selected items</p>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="spinner" id="loadingSpinner" style="display: none;"></div>
+
+            <!-- Empty Cart Message -->
+            <div class="empty-cart-message" id="emptyCartMessage" style="display: none;">
+                <i class="fas fa-shopping-cart empty-cart-icon"></i>
+                <h2>Your cart is empty</h2>
+                <p>Looks like you haven't added any items to your cart yet.</p>
+                <a href="products.html" class="btn btn-primary">Continue Shopping</a>
+            </div>
+
+            <!-- Cart Layout -->
+            <div class="cart-layout" id="cartLayout" style="display: none;">
+                <!-- Cart Items Section -->
+                <div class="cart-items-section">
+                    <div class="cart-header-row">
+                        <h2>Cart Items (<span id="cartItemCount">0</span>)</h2>
+                        <button class="btn-text" id="clearCartBtn" onclick="clearCart()">
+                            <i class="fas fa-trash"></i> Clear Cart
+                        </button>
+                    </div>
+                    <div class="cart-items" id="cartItems">
+                        <!-- Cart items will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Cart Summary Section -->
+                <div class="cart-summary-section">
+                    <div class="cart-summary" id="cartSummary">
+                        <!-- Cart summary will be loaded here -->
+                    </div>
+
+                    <!-- Coupon Code Section -->
+                    <div class="coupon-section">
+                        <h3>Have a coupon?</h3>
+                        <div class="coupon-input-group">
+                            <input type="text" id="couponCode" placeholder="Enter coupon code" class="coupon-input">
+                            <button class="btn btn-secondary" onclick="applyCoupon()">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Continue Shopping -->
+                    <div class="continue-shopping">
+                        <a href="products.html" class="continue-link">
+                            <i class="fas fa-arrow-left"></i> Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>LUXURY BAGS</h3>
+                <p>Redefining elegance since 2010. Each piece is crafted with passion and precision by master artisans.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="products.html">New Arrivals</a></li>
+                    <li><a href="products.html?filter=bestsellers">Best Sellers</a></li>
+                    <li><a href="products.html?filter=limited">Limited Edition</a></li>
+                    <li><a href="products.html?filter=gift">Gift Cards</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Newsletter</h3>
+                <p>Subscribe for exclusive offers</p>
+                <form style="display: flex; gap: 0.5rem; margin-top: 1rem;" onsubmit="event.preventDefault(); showNotification('Newsletter feature coming soon!', 'info');">
+                    <input type="email" placeholder="Your email" style="flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); border-radius: var(--radius-full); color: var(--text-primary);">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LUXURY BAGS. All rights reserved. Crafted with excellence in Italy.</p>
+        </div>
+    </footer>
+
+    <script>
+        const taxRate = 0.1; // 10%
+
+        // Show notification function
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Add notification styles if not exists
+        if (!document.querySelector('#notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                .notification {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    background: var(--gradient-card);
+                    border: 2px solid var(--accent-gold);
+                    border-radius: var(--radius-lg);
+                    color: var(--text-primary);
+                    box-shadow: var(--shadow-gold);
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    animation: slideIn 0.3s ease;
+                }
+                
+                .notification-success {
+                    border-color: var(--success);
+                }
+                
+                .notification-error {
+                    border-color: var(--danger);
+                }
+                
+                .notification-info {
+                    border-color: var(--accent-gold);
+                }
+                
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Get cart from localStorage
+        function getCart() {
+            return JSON.parse(localStorage.getItem('cart') || '[]');
+        }
+
+        // Save cart to localStorage
+        function saveCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+        }
+
+        // Update cart count in navbar
+        function updateCartCount() {
+            const cart = getCart();
+            const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = count;
+            });
+        }
+
+        // Calculate cart total
+        function getCartTotal() {
+            const cart = getCart();
+            return cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
+        }
+
+        function displayCart() {
+            const cartItems = getCart();
+            const cartLayout = document.getElementById('cartLayout');
+            const emptyCartMessage = document.getElementById('emptyCartMessage');
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartItemCount = document.getElementById('cartItemCount');
+
+            if (cartItems.length === 0) {
+                cartLayout.style.display = 'none';
+                emptyCartMessage.style.display = 'block';
+                return;
+            }
+
+            cartLayout.style.display = 'grid';
+            emptyCartMessage.style.display = 'none';
+            cartItemCount.textContent = cartItems.length;
+
+            cartItemsContainer.innerHTML = cartItems.map(item => `
+                <div class="cart-item" data-id="${item.id}" data-color="${item.color || 'Brown'}">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image" onclick="viewProduct(${item.id})">
+                    <div class="cart-item-details">
+                        <h3 onclick="viewProduct(${item.id})">${item.name}</h3>
+                        <p class="cart-item-category">${item.category || 'Bag'}</p>
+                        <p class="cart-item-color">Color: <span style="color: var(--accent-gold);">${item.color || 'Brown'}</span></p>
+                    </div>
+                    <div class="cart-item-price">
+                        $${item.price.toFixed(2)}
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="quantity-btn-small" onclick="updateQuantity(${item.id}, ${(item.quantity || 1) - 1}, '${item.color || 'Brown'}')">-</button>
+                        <input type="number" class="quantity-input-small" value="${item.quantity || 1}" min="1" max="${item.stock || 10}" 
+                               onchange="updateQuantity(${item.id}, this.value, '${item.color || 'Brown'}')">
+                        <button class="quantity-btn-small" onclick="updateQuantity(${item.id}, ${(item.quantity || 1) + 1}, '${item.color || 'Brown'}')">+</button>
+                    </div>
+                    <div class="cart-item-total">
+                        $${((item.price * (item.quantity || 1))).toFixed(2)}
+                    </div>
+                    <button class="cart-item-remove" onclick="removeItem(${item.id}, '${item.color || 'Brown'}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            updateCartSummary();
+        }
+
+        function updateCartSummary() {
+            const cartItems = getCart();
+            const subtotal = getCartTotal();
+            const shipping = subtotal > 500 ? 0 : 10;
+            const tax = subtotal * taxRate;
+            const total = subtotal + shipping + tax;
+
+            document.getElementById('cartSummary').innerHTML = `
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal (${cartItems.length} items)</span>
+                    <span>$${subtotal.toFixed(2)}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>${shipping === 0 ? 'Free' : '$' + shipping.toFixed(2)}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax (10%)</span>
+                    <span>$${tax.toFixed(2)}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>$${total.toFixed(2)}</span>
+                </div>
+                <button class="btn btn-primary btn-large" onclick="proceedToCheckout()" ${cartItems.length === 0 ? 'disabled' : ''}>
+                    Proceed to Checkout
+                </button>
+            `;
+        }
+
+        function updateQuantity(productId, newQuantity, color = 'Brown') {
+            if (newQuantity < 1) return;
+            
+            let cart = getCart();
+            const itemIndex = cart.findIndex(item => item.id === productId && item.color === color);
+            
+            if (itemIndex !== -1) {
+                cart[itemIndex].quantity = parseInt(newQuantity);
+                saveCart(cart);
+                displayCart();
+                showNotification('Cart updated', 'success');
+            }
+        }
+
+        function removeItem(productId, color = 'Brown') {
+            let cart = getCart();
+            cart = cart.filter(item => !(item.id === productId && item.color === color));
+            saveCart(cart);
+            displayCart();
+            showNotification('Item removed from cart', 'success');
+        }
+
+        function clearCart() {
+            if (confirm('Are you sure you want to clear your cart?')) {
+                saveCart([]);
+                displayCart();
+                showNotification('Cart cleared', 'success');
+            }
+        }
+
+        function applyCoupon() {
+            const coupon = document.getElementById('couponCode').value;
+            if (coupon.toLowerCase() === 'luxury10') {
+                showNotification('Coupon applied! 10% discount will be applied at checkout', 'success');
+            } else {
+                showNotification('Invalid coupon code', 'error');
+            }
+        }
+
+        function proceedToCheckout() {
+            if (!isAuthenticated()) {
+                sessionStorage.setItem('redirectAfterLogin', 'cart.html');
+                window.location.href = 'login.html';
+                return;
+            }
+            window.location.href = 'checkout.html';
+        }
+
+        function viewProduct(productId) {
+            window.location.href = `product-detail.html?id=${productId}`;
+        }
+
+        // Check authentication
+        function isAuthenticated() {
+            return !!localStorage.getItem('token');
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showNotification('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            displayCart();
+            updateCartCount();
+            
+            // Check login status for navbar
+            if (isAuthenticated()) {
+                document.querySelectorAll('.login-link').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.logout-link').forEach(el => el.style.display = 'inline-block');
+                document.querySelectorAll('.profile-link').forEach(el => el.style.display = 'inline-block');
+            } else {
+                document.querySelectorAll('.login-link').forEach(el => el.style.display = 'inline-block');
+                document.querySelectorAll('.logout-link').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.profile-link').forEach(el => el.style.display = 'none');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Luxury Bags</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">LUXURY BAGS</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Collection</a>
+            <a href="login.html" class="login-link">Sign In</a>
+            <a href="#" class="logout-link" style="display: none;" onclick="logout()">Logout</a>
+            <a href="dashboard.html" class="profile-link" style="display: none;">Dashboard</a>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Order Confirmation Section -->
+    <div class="order-confirmation-page">
+        <div class="container">
+            <!-- Loading Spinner -->
+            <div class="spinner" id="loadingSpinner" style="display: none;"></div>
+
+            <!-- Error Message -->
+            <div class="alert alert-error" id="errorMessage" style="display: none;">
+                Order not found
+            </div>
+
+            <!-- Confirmation Container -->
+            <div class="confirmation-container" id="confirmationContainer" style="display: none;">
+                <!-- Success Header -->
+                <div class="confirmation-header">
+                    <div class="success-animation">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h1>Thank You for Your Order!</h1>
+                    <p>Your order has been successfully placed and is being processed.</p>
+                </div>
+
+                <!-- Order Info Bar -->
+                <div class="order-info-bar">
+                    <div class="info-item">
+                        <span class="info-label">Order Number</span>
+                        <span class="info-value" id="orderNumber">#ORD-123456</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Order Date</span>
+                        <span class="info-value" id="orderDate">January 15, 2024</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Order Status</span>
+                        <span class="info-value status-processing" id="orderStatus">Processing</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Payment Method</span>
+                        <span class="info-value" id="paymentMethod">Credit Card</span>
+                    </div>
+                </div>
+
+                <!-- Order Details Grid -->
+                <div class="order-details-grid">
+                    <!-- Order Items -->
+                    <div class="order-items-section">
+                        <h2>Order Items</h2>
+                        <div class="order-items-list" id="orderItemsList">
+                            <!-- Order items will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="order-summary-section">
+                        <h2>Order Summary</h2>
+                        <div class="order-summary-card">
+                            <div class="summary-row">
+                                <span>Subtotal:</span>
+                                <span id="summarySubtotal">$0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping:</span>
+                                <span id="summaryShipping">$10.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Tax (10%):</span>
+                                <span id="summaryTax">$0.00</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total:</span>
+                                <span id="summaryTotal">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Information -->
+                <div class="shipping-info-section">
+                    <h2><i class="fas fa-truck"></i> Shipping Information</h2>
+                    <div class="shipping-details-card" id="shippingDetails">
+                        <!-- Shipping details will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Payment Information -->
+                <div class="payment-info-section">
+                    <h2><i class="fas fa-credit-card"></i> Payment Information</h2>
+                    <div class="payment-details-card" id="paymentDetails">
+                        <!-- Payment details will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="confirmation-actions">
+                    <a href="products.html" class="btn btn-primary">
+                        <i class="fas fa-shopping-bag"></i> Continue Shopping
+                    </a>
+                    <a href="dashboard.html?section=orders" class="btn btn-secondary">
+                        <i class="fas fa-history"></i> View Order History
+                    </a>
+                    <button class="btn btn-secondary" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print Receipt
+                    </button>
+                </div>
+
+                <!-- Email Confirmation Note -->
+                <div class="email-confirmation-note">
+                    <i class="fas fa-envelope"></i>
+                    <p>A confirmation email has been sent to <span id="customerEmail">your email address</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>LUXURY BAGS</h3>
+                <p>Redefining elegance since 2010. Each piece is crafted with passion and precision by master artisans.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="products.html">New Arrivals</a></li>
+                    <li><a href="products.html?filter=bestsellers">Best Sellers</a></li>
+                    <li><a href="products.html?filter=limited">Limited Edition</a></li>
+                    <li><a href="products.html?filter=gift">Gift Cards</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Newsletter</h3>
+                <p>Subscribe for exclusive offers</p>
+                <form style="display: flex; gap: 0.5rem; margin-top: 1rem;" onsubmit="event.preventDefault(); showNotification('Newsletter feature coming soon!', 'info');">
+                    <input type="email" placeholder="Your email" style="flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); border-radius: var(--radius-full); color: var(--text-primary);">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LUXURY BAGS. All rights reserved. Crafted with excellence in Italy.</p>
+        </div>
+    </footer>
+
+    <script>
+        const taxRate = 0.1;
+
+        // ============================================
+        // NOTIFICATION SYSTEM
+        // ============================================
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Add notification styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: var(--gradient-card);
+                border: 2px solid var(--accent-gold);
+                border-radius: var(--radius-lg);
+                color: var(--text-primary);
+                box-shadow: var(--shadow-gold);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                animation: slideIn 0.3s ease;
+            }
+            
+            .notification-success {
+                border-color: var(--success);
+            }
+            
+            .notification-error {
+                border-color: var(--danger);
+            }
+            
+            .notification-info {
+                border-color: var(--accent-gold);
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ============================================
+        // GET ORDER FROM URL
+        // ============================================
+        function getOrderId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // ============================================
+        // LOAD ORDER DETAILS
+        // ============================================
+        function loadOrderDetails() {
+            const orderId = getOrderId();
+            const spinner = document.getElementById('loadingSpinner');
+            const confirmationContainer = document.getElementById('confirmationContainer');
+            const errorMessage = document.getElementById('errorMessage');
+
+            spinner.style.display = 'block';
+            confirmationContainer.style.display = 'none';
+            errorMessage.style.display = 'none';
+
+            setTimeout(() => {
+                // Get orders from localStorage
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                
+                // Find the order
+                const order = orders.find(o => o.id === orderId);
+
+                if (!order) {
+                    spinner.style.display = 'none';
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                displayOrderConfirmation(order);
+                
+                spinner.style.display = 'none';
+                confirmationContainer.style.display = 'block';
+            }, 500);
+        }
+
+        // ============================================
+        // DISPLAY ORDER CONFIRMATION
+        // ============================================
+        function displayOrderConfirmation(order) {
+            // Basic order info
+            document.getElementById('orderNumber').textContent = order.id;
+            document.getElementById('orderDate').textContent = formatDate(order.date);
+            document.getElementById('orderStatus').textContent = order.status || 'Processing';
+            document.getElementById('paymentMethod').textContent = formatPaymentMethod(order.paymentMethod);
+            
+            // Get user email
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            document.getElementById('customerEmail').textContent = user.email || order.shipping?.email || 'your email address';
+
+            // Display order items
+            displayOrderItems(order);
+            
+            // Calculate and display totals
+            displayOrderTotals(order);
+            
+            // Display shipping details
+            displayShippingDetails(order);
+            
+            // Display payment details
+            displayPaymentDetails(order);
+        }
+
+        // ============================================
+        // DISPLAY ORDER ITEMS
+        // ============================================
+        function displayOrderItems(order) {
+            const itemsList = document.getElementById('orderItemsList');
+            
+            if (order.product) {
+                // Single product order
+                const product = order.product;
+                itemsList.innerHTML = `
+                    <div class="order-item">
+                        <img src="${product.image}" alt="${product.name}" class="order-item-image">
+                        <div class="order-item-details">
+                            <h3>${product.name}</h3>
+                            <p class="order-item-meta">
+                                Color: ${product.color || 'Brown'} | 
+                                Quantity: ${product.quantity || 1}
+                            </p>
+                            <p class="order-item-price">$${product.price.toFixed(2)} each</p>
+                        </div>
+                        <div class="order-item-total">
+                            $${((product.price * (product.quantity || 1)).toFixed(2))}
+                        </div>
+                    </div>
+                `;
+            } else if (order.items && order.items.length > 0) {
+                // Multiple items order
+                itemsList.innerHTML = order.items.map(item => `
+                    <div class="order-item">
+                        <img src="${item.image}" alt="${item.name}" class="order-item-image">
+                        <div class="order-item-details">
+                            <h3>${item.name}</h3>
+                            <p class="order-item-meta">
+                                Color: ${item.color || 'Brown'} | 
+                                Quantity: ${item.quantity || 1}
+                            </p>
+                            <p class="order-item-price">$${item.price.toFixed(2)} each</p>
+                        </div>
+                        <div class="order-item-total">
+                            $${((item.price * (item.quantity || 1)).toFixed(2))}
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                itemsList.innerHTML = '<p class="text-center">No items found</p>';
+            }
+        }
+
+        // ============================================
+        // DISPLAY ORDER TOTALS
+        // ============================================
+        function displayOrderTotals(order) {
+            let subtotal, shipping, tax, total;
+            
+            if (order.subtotal && order.total) {
+                // Use existing order totals
+                subtotal = order.subtotal;
+                shipping = order.shipping || 0;
+                tax = order.tax || (subtotal * taxRate);
+                total = order.total;
+            } else if (order.product) {
+                // Calculate from product
+                subtotal = order.product.price * (order.product.quantity || 1);
+                shipping = subtotal > 500 ? 0 : 10;
+                tax = subtotal * taxRate;
+                total = subtotal + shipping + tax;
+            } else {
+                subtotal = 0;
+                shipping = 0;
+                tax = 0;
+                total = 0;
+            }
+
+            document.getElementById('summarySubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('summaryShipping').textContent = shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`;
+            document.getElementById('summaryTax').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('summaryTotal').textContent = `$${total.toFixed(2)}`;
+        }
+
+        // ============================================
+        // DISPLAY SHIPPING DETAILS
+        // ============================================
+        function displayShippingDetails(order) {
+            const shippingDetails = document.getElementById('shippingDetails');
+            
+            if (order.shipping) {
+                const shipping = order.shipping;
+                shippingDetails.innerHTML = `
+                    <div class="shipping-detail-row">
+                        <span class="detail-label">Full Name:</span>
+                        <span class="detail-value">${shipping.name || 'N/A'}</span>
+                    </div>
+                    <div class="shipping-detail-row">
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">${shipping.address || 'N/A'}</span>
+                    </div>
+                    <div class="shipping-detail-row">
+                        <span class="detail-label">City:</span>
+                        <span class="detail-value">${shipping.city || 'N/A'}</span>
+                    </div>
+                    <div class="shipping-detail-row">
+                        <span class="detail-label">State:</span>
+                        <span class="detail-value">${shipping.state || 'N/A'}</span>
+                    </div>
+                    <div class="shipping-detail-row">
+                        <span class="detail-label">ZIP Code:</span>
+                        <span class="detail-value">${shipping.zip || 'N/A'}</span>
+                    </div>
+                    <div class="shipping-detail-row">
+                        <span class="detail-label">Phone:</span>
+                        <span class="detail-value">${shipping.phone || 'N/A'}</span>
+                    </div>
+                `;
+            } else {
+                shippingDetails.innerHTML = '<p class="text-center">No shipping information available</p>';
+            }
+        }
+
+        // ============================================
+        // DISPLAY PAYMENT DETAILS
+        // ============================================
+        function displayPaymentDetails(order) {
+            const paymentDetails = document.getElementById('paymentDetails');
+            
+            const paymentMethod = order.paymentMethod || 'credit_card';
+            const methodDisplay = formatPaymentMethod(paymentMethod);
+            
+            let paymentHtml = `
+                <div class="payment-detail-row">
+                    <span class="detail-label">Payment Method:</span>
+                    <span class="detail-value">${methodDisplay}</span>
+                </div>
+                <div class="payment-detail-row">
+                    <span class="detail-label">Payment Status:</span>
+                    <span class="detail-value status-${order.paymentStatus || 'completed'}">${order.paymentStatus || 'Completed'}</span>
+                </div>
+            `;
+            
+            if (paymentMethod === 'credit_card' || paymentMethod === 'debit_card') {
+                paymentHtml += `
+                    <div class="payment-detail-row">
+                        <span class="detail-label">Card Number:</span>
+                        <span class="detail-value">•••• •••• •••• 4242</span>
+                    </div>
+                `;
+            } else if (paymentMethod === 'paypal') {
+                paymentHtml += `
+                    <div class="payment-detail-row">
+                        <span class="detail-label">PayPal Email:</span>
+                        <span class="detail-value">${order.shipping?.email || 'customer@example.com'}</span>
+                    </div>
+                `;
+            } else if (paymentMethod === 'cash_on_delivery') {
+                paymentHtml += `
+                    <div class="payment-detail-row">
+                        <span class="detail-label">Payment Type:</span>
+                        <span class="detail-value">Cash on Delivery</span>
+                    </div>
+                `;
+            }
+            
+            paymentDetails.innerHTML = paymentHtml;
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        function formatPaymentMethod(method) {
+            const methods = {
+                'credit_card': 'Credit Card',
+                'debit_card': 'Debit Card',
+                'paypal': 'PayPal',
+                'cash_on_delivery': 'Cash on Delivery'
+            };
+            return methods[method] || method;
+        }
+
+        // ============================================
+        // AUTHENTICATION FUNCTIONS
+        // ============================================
+        function isAuthenticated() {
+            return !!localStorage.getItem('token');
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = count;
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showNotification('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOrderDetails();
+            updateCartCount();
+            
+            // Update navbar based on login status
+            if (isAuthenticated()) {
+                document.querySelectorAll('.login-link').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.logout-link').forEach(el => el.style.display = 'inline-block');
+                document.querySelectorAll('.profile-link').forEach(el => el.style.display = 'inline-block');
+            } else {
+                document.querySelectorAll('.login-link').forEach(el => el.style.display = 'inline-block');
+                document.querySelectorAll('.logout-link').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.profile-link').forEach(el => el.style.display = 'none');
+            }
+        });
+    </script>
+
+    <style>
+        /* Order Confirmation Page Styles */
+        .order-confirmation-page {
+            padding: 4rem 5%;
+            min-height: 60vh;
+        }
+
+        .confirmation-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .confirmation-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .success-animation {
+            margin-bottom: 1.5rem;
+        }
+
+        .success-animation i {
+            font-size: 5rem;
+            color: var(--success);
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .confirmation-header h1 {
+            font-size: 2.5rem;
+            color: var(--success);
+            margin-bottom: 0.5rem;
+        }
+
+        .confirmation-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .order-info-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            background: var(--gradient-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .status-processing {
+            color: var(--warning) !important;
+        }
+
+        .order-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .order-items-section,
+        .order-summary-section,
+        .shipping-info-section,
+        .payment-info-section {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .order-items-section h2,
+        .order-summary-section h2,
+        .shipping-info-section h2,
+        .payment-info-section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .order-items-section h2 i,
+        .shipping-info-section h2 i,
+        .payment-info-section h2 i {
+            color: var(--accent-gold);
+            margin-right: 0.5rem;
+        }
+
+        .order-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+        }
+
+        .order-item-details {
+            flex: 1;
+        }
+
+        .order-item-details h3 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .order-item-meta {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .order-item-price {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .order-item-total {
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        .order-summary-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        .summary-row.total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            border-top: 1px solid var(--border-light);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+        }
+
+        .shipping-details-card,
+        .payment-details-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .shipping-detail-row,
+        .payment-detail-row {
+            display: flex;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .shipping-detail-row:last-child,
+        .payment-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            width: 120px;
+            color: var(--text-muted);
+        }
+
+        .detail-value {
+            flex: 1;
+            color: var(--text-primary);
+        }
+
+        .confirmation-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 3rem 0;
+        }
+
+        .email-confirmation-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            background: rgba(46, 204, 113, 0.1);
+            border-radius: var(--radius-lg);
+            color: var(--success);
+        }
+
+        .email-confirmation-note i {
+            font-size: 1.2rem;
+        }
+
+        .email-confirmation-note span {
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .order-info-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .order-details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .confirmation-actions {
+                flex-direction: column;
+            }
+            
+            .order-item {
+                flex-wrap: wrap;
+            }
+            
+            .order-item-total {
+                width: 100%;
+                text-align: right;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .order-info-bar {
+                grid-template-columns: 1fr;
+            }
+            
+            .shipping-detail-row,
+            .payment-detail-row {
+                flex-direction: column;
+            }
+            
+            .detail-label {
+                width: 100%;
+                margin-bottom: 0.2rem;
+            }
+        }
+    </style>
+</body>
+</html>

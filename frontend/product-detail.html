@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - Luxury Bags</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">LUXURY BAGS</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Collection</a>
+            <a href="login.html" class="login-link">Sign In</a>
+            <a href="#" class="logout-link" style="display: none;" onclick="logout()">Logout</a>
+            <a href="dashboard.html" class="profile-link" style="display: none;">Dashboard</a>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Product Detail Section -->
+    <div class="product-detail-page">
+        <div class="container">
+            <!-- Back Button -->
+            <div class="back-button">
+                <a href="javascript:history.back()" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Collection
+                </a>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="spinner" id="loadingSpinner" style="display: none;"></div>
+
+            <!-- Error Message -->
+            <div class="alert alert-error" id="errorMessage" style="display: none;">
+                Product not found
+            </div>
+
+            <!-- Product Detail Container -->
+            <div class="product-detail-container" id="productDetail" style="display: none;">
+                <div class="product-detail-grid">
+                    <!-- Product Images -->
+                    <div class="product-images">
+                        <div class="main-image-container">
+                            <img src="" alt="Product Image" class="main-product-image" id="mainProductImage">
+                            <span class="product-badge-large" id="productBadge"></span>
+                        </div>
+                        <div class="thumbnail-images" id="thumbnailImages">
+                            <!-- Thumbnails will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info-detail">
+                        <div class="product-category-large" id="productCategory"></div>
+                        <h1 class="product-title" id="productName"></h1>
+                        
+                        <!-- Rating -->
+                        <div class="product-rating-large">
+                            <div class="stars" id="productRating"></div>
+                            <span class="rating-count" id="ratingCount"></span>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="product-price-large">
+                            <span class="current-price" id="currentPrice"></span>
+                            <span class="old-price" id="oldPrice"></span>
+                            <span class="discount-badge" id="discountBadge"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="product-description-large" id="productDescription"></div>
+
+                        <!-- Features -->
+                        <div class="product-features" id="productFeatures">
+                            <!-- Features will be loaded here -->
+                        </div>
+
+                        <!-- Color Selection -->
+                        <div class="product-options">
+                            <h3>Color</h3>
+                            <div class="color-options">
+                                <button class="color-option active" style="background: #8B4513;" onclick="selectColor('Brown', this)"></button>
+                                <button class="color-option" style="background: #000000;" onclick="selectColor('Black', this)"></button>
+                                <button class="color-option" style="background: #800020;" onclick="selectColor('Burgundy', this)"></button>
+                                <button class="color-option" style="background: #CD853F;" onclick="selectColor('Tan', this)"></button>
+                            </div>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="product-options">
+                            <h3>Quantity</h3>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" onclick="updateQuantity(-1)">-</button>
+                                <input type="number" id="productQuantity" value="1" min="1" max="10" readonly>
+                                <button class="quantity-btn" onclick="updateQuantity(1)">+</button>
+                            </div>
+                            <span class="stock-status" id="stockStatus">In Stock</span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="product-actions">
+                            <button class="btn btn-primary btn-large" onclick="addToCart()">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="btn btn-secondary btn-large" onclick="buyNow()">
+                                <i class="fas fa-bolt"></i> Buy Now
+                            </button>
+                            <button class="btn-icon" onclick="addToWishlist()">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+
+                        <!-- Shipping Info -->
+                        <div class="shipping-info">
+                            <div class="info-item">
+                                <i class="fas fa-truck"></i>
+                                <div>
+                                    <h4>Free Shipping</h4>
+                                    <p>On orders over $500</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-undo-alt"></i>
+                                <div>
+                                    <h4>30-Day Returns</h4>
+                                    <p>Hassle-free returns</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <div>
+                                    <h4>Secure Checkout</h4>
+                                    <p>SSL Encrypted</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Details Tabs -->
+                <div class="product-tabs">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" onclick="switchTab('description')">Description</button>
+                        <button class="tab-btn" onclick="switchTab('specifications')">Specifications</button>
+                        <button class="tab-btn" onclick="switchTab('reviews')">Reviews</button>
+                        <button class="tab-btn" onclick="switchTab('shipping')">Shipping & Returns</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="descriptionTab">
+                        <div class="description-content">
+                            <p id="fullDescription"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="specificationsTab">
+                        <div class="specifications-content">
+                            <table class="specs-table" id="specsTable">
+                                <!-- Specifications will be loaded here -->
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="reviewsTab">
+                        <div class="reviews-content">
+                            <div class="reviews-summary">
+                                <div class="average-rating">
+                                    <span class="average-number" id="avgRating">4.8</span>
+                                    <div class="average-stars" id="avgStars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span id="reviewCount">Based on 12 reviews</span>
+                                </div>
+                                <button class="btn btn-secondary" onclick="writeReview()">Write a Review</button>
+                            </div>
+                            
+                            <div class="reviews-list" id="reviewsList">
+                                <!-- Reviews will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="shippingTab">
+                        <div class="shipping-content">
+                            <h3>Shipping Information</h3>
+                            <p>Free standard shipping on all orders over $500. Orders under $500 incur a flat rate of $10.</p>
+                            <p>Express shipping available for $25 - 1-2 business days</p>
+                            
+                            <h3>Returns Policy</h3>
+                            <p>We offer a 30-day return policy for unworn items in original condition with tags attached. Return shipping is free for exchanges, or a flat $10 fee will be deducted from your refund.</p>
+                            
+                            <h3>International Shipping</h3>
+                            <p>We ship worldwide. International customers are responsible for any customs fees or import duties.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Products -->
+                <div class="related-products">
+                    <h2>You May Also Like</h2>
+                    <div class="products-grid" id="relatedProducts">
+                        <!-- Related products will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal for Buy Now -->
+    <div id="paymentModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Complete Your Purchase</h2>
+                <button class="modal-close" onclick="closePaymentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="order-summary-mini" id="paymentProductDetails">
+                    <!-- Product details will be loaded here -->
+                </div>
+                
+                <div class="payment-methods-section">
+                    <h3>Select Payment Method</h3>
+                    <div class="payment-options">
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="credit_card" checked onchange="showPaymentForm('credit_card')">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Credit Card</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="debit_card" onchange="showPaymentForm('debit_card')">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Debit Card</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="paypal" onchange="showPaymentForm('paypal')">
+                            <i class="fab fa-paypal"></i>
+                            <span>PayPal</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="cash_on_delivery" onchange="showPaymentForm('cod')">
+                            <i class="fas fa-money-bill"></i>
+                            <span>Cash on Delivery</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Credit/Debit Card Form -->
+                <div id="cardPaymentForm" class="payment-form">
+                    <h3>Card Details</h3>
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5" oninput="formatExpiryDate(this)">
+                        </div>
+                        <div class="form-group">
+                            <label>CVV</label>
+                            <input type="text" id="cvv" placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Name on Card</label>
+                        <input type="text" id="cardName" placeholder="John Doe">
+                    </div>
+                </div>
+
+                <!-- PayPal Form -->
+                <div id="paypalForm" class="payment-form" style="display: none;">
+                    <div class="paypal-info">
+                        <i class="fab fa-paypal" style="font-size: 3rem; color: #003087;"></i>
+                        <p>You will be redirected to PayPal to complete your payment securely.</p>
+                    </div>
+                </div>
+
+                <!-- Cash on Delivery Form -->
+                <div id="codForm" class="payment-form" style="display: none;">
+                    <div class="cod-info">
+                        <i class="fas fa-truck" style="font-size: 3rem; color: var(--accent-gold);"></i>
+                        <p>Pay with cash when your order is delivered.</p>
+                        <p class="note">Please have exact change ready. Delivery driver can provide change up to $20.</p>
+                    </div>
+                </div>
+
+                <!-- Shipping Address Form -->
+                <div class="shipping-address-section">
+                    <h3>Shipping Address</h3>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="shippingName" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="shippingAddress" placeholder="Street address">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" id="shippingCity" placeholder="City">
+                        </div>
+                        <div class="form-group">
+                            <label>State</label>
+                            <input type="text" id="shippingState" placeholder="State">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ZIP Code</label>
+                            <input type="text" id="shippingZip" placeholder="ZIP code">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="text" id="shippingPhone" placeholder="Phone number">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Total -->
+                <div class="payment-total">
+                    <div class="total-row">
+                        <span>Subtotal:</span>
+                        <span id="paymentSubtotal">$0</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Shipping:</span>
+                        <span id="paymentShipping">$10.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Tax (10%):</span>
+                        <span id="paymentTax">$0</span>
+                    </div>
+                    <div class="total-row grand-total">
+                        <span>Total:</span>
+                        <span id="paymentTotal">$0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePaymentModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="processPayment()">
+                    <i class="fas fa-lock"></i> Complete Order
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>LUXURY BAGS</h3>
+                <p>Redefining elegance since 2010. Each piece is crafted with passion and precision by master artisans.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="products.html">New Arrivals</a></li>
+                    <li><a href="products.html?filter=bestsellers">Best Sellers</a></li>
+                    <li><a href="products.html?filter=limited">Limited Edition</a></li>
+                    <li><a href="products.html?filter=gift">Gift Cards</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Newsletter</h3>
+                <p>Subscribe for exclusive offers</p>
+                <form style="display: flex; gap: 0.5rem; margin-top: 1rem;" onsubmit="event.preventDefault(); showNotification('Newsletter feature coming soon!', 'info');">
+                    <input type="email" placeholder="Your email" style="flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); border-radius: var(--radius-full); color: var(--text-primary);">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LUXURY BAGS. All rights reserved. Crafted with excellence in Italy.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Complete Product Database with all 20 products and full details
+        const products = [
+            // Leather Collection (1-5)
+            {
+                id: 1,
+                name: "Italian Leather Tote",
+                category: "tote",
+                price: 899,
+                old_price: 1299,
+                image: "https://images.unsplash.com/photo-1584917865448-de89fe76cc2b?w=600&auto=format",
+                badge: "BEST SELLER",
+                rating: 5,
+                review_count: 24,
+                description: "Handcrafted in Florence with premium Italian leather. Features a spacious interior with multiple pockets, perfect for everyday elegance.",
+                full_description: "This exquisite Italian Leather Tote is meticulously handcrafted by master artisans in Florence, Italy, using the finest full-grain leather that develops a beautiful patina over time. The spacious interior features a padded laptop compartment, two slip pockets, and a zippered pocket for organization. The bag is reinforced with solid brass hardware and includes a detachable shoulder strap for versatile carrying options. Each piece comes with a dust bag and authenticity certificate.",
+                features: [
+                    "Premium Italian full-grain leather",
+                    "Handcrafted by master artisans in Florence",
+                    "Solid brass hardware with gold finish",
+                    "Padded laptop compartment fits up to 15\"",
+                    "Two interior slip pockets and one zippered pocket",
+                    "Detachable and adjustable shoulder strap",
+                    "Protective metal feet on base",
+                    "Includes dust bag and authenticity certificate"
+                ],
+                specifications: {
+                    material: "100% Italian Full-Grain Leather",
+                    dimensions: '14" W x 11" H x 5" D',
+                    hardware: "Solid Brass with Gold Finish",
+                    strap_drop: '10" (adjustable up to 14")',
+                    interior: "2 main compartments, 1 laptop sleeve, 2 slip pockets, 1 zip pocket",
+                    weight: "2.8 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Magnetic snap and top zipper",
+                    lining: "Premium microfiber suede"
+                },
+                reviews: [
+                    {
+                        author: "Sarah M.",
+                        rating: 5,
+                        date: "2 weeks ago",
+                        text: "Absolutely stunning bag! The leather quality is exceptional and the craftsmanship is evident in every detail. Worth every penny!"
+                    },
+                    {
+                        author: "Jennifer L.",
+                        rating: 5,
+                        date: "1 month ago",
+                        text: "My new favorite bag! It's spacious enough for work but elegant enough for dinner dates. The leather is so soft and luxurious."
+                    },
+                    {
+                        author: "Michael R.",
+                        rating: 5,
+                        date: "2 months ago",
+                        text: "Bought this for my wife and she absolutely loves it. The quality is outstanding and the customer service was excellent."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                name: "Vintage Leather Satchel",
+                category: "leather",
+                price: 749,
+                old_price: 999,
+                image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format",
+                badge: "SALE",
+                rating: 4,
+                review_count: 18,
+                description: "Classic vintage design with solid brass hardware. Distressed leather finish gives it a timeless appeal that only gets better with age.",
+                full_description: "The Vintage Leather Satchel captures the essence of classic style with its distressed leather finish that develops character over time. Crafted from premium full-grain leather, this satchel features a unique hand-distressed process that gives each bag its own personality. The solid brass hardware complements the vintage aesthetic while ensuring durability. The interior is thoughtfully designed with organizational pockets and a secure zippered compartment.",
+                features: [
+                    "Distressed full-grain leather",
+                    "Hand-distressed for unique character",
+                    "Solid brass vintage-style hardware",
+                    "Adjustable shoulder strap",
+                    "Two main compartments",
+                    "Interior zip pocket and slip pockets",
+                    "Leather-bound top handle",
+                    "Antique brass finish"
+                ],
+                specifications: {
+                    material: "Distressed Full-Grain Leather",
+                    dimensions: '12" W x 9" H x 4" D',
+                    hardware: "Solid Brass with Antique Finish",
+                    strap_drop: '11" (adjustable)',
+                    interior: "2 main compartments, 1 zip pocket, 2 slip pockets",
+                    weight: "2.4 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Buckle and strap closure",
+                    lining: "Cotton twill"
+                },
+                reviews: [
+                    {
+                        author: "Emma W.",
+                        rating: 4,
+                        date: "1 week ago",
+                        text: "Beautiful bag with a lovely vintage feel. The leather is high quality and the distressing gives it character."
+                    },
+                    {
+                        author: "David K.",
+                        rating: 4,
+                        date: "3 weeks ago",
+                        text: "Great everyday bag. The size is perfect and it holds everything I need. The vintage look is unique."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                name: "Oxford Leather Briefcase",
+                category: "business",
+                price: 1299,
+                old_price: 1699,
+                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
+                badge: "PREMIUM",
+                rating: 5,
+                review_count: 15,
+                description: "Professional elegance with padded laptop compartment. Features organization for all your business essentials with timeless Oxford styling.",
+                full_description: "The Oxford Leather Briefcase represents the pinnacle of professional sophistication. Handcrafted from premium calfskin leather, this briefcase features a structured design that maintains its shape while providing ample storage for all your business essentials. The padded laptop compartment safely secures devices up to 15 inches, while organized interior pockets keep documents, pens, and accessories neatly arranged. The combination of timeless design and modern functionality makes this briefcase the perfect companion for the discerning professional.",
+                features: [
+                    "Premium calfskin leather",
+                    "Padded laptop compartment (fits 15\")",
+                    "Organizer panel for pens and cards",
+                    "Large document pocket",
+                    "Front zip pocket for accessories",
+                    "Detachable shoulder strap",
+                    "Solid brass lock and key",
+                    "Leather-wrapped handle"
+                ],
+                specifications: {
+                    material: "Premium Calfskin Leather",
+                    dimensions: '16" W x 12" H x 4" D',
+                    hardware: "Solid Brass with Polished Finish",
+                    strap_drop: '8" (handle), 18" (shoulder strap)',
+                    interior: "Laptop compartment, document pocket, 3 pen slots, card slots, zip pocket",
+                    weight: "3.2 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Combination lock",
+                    lining: "Microfiber with organization panel"
+                },
+                reviews: [
+                    {
+                        author: "Robert J.",
+                        rating: 5,
+                        date: "1 week ago",
+                        text: "Exceptional quality briefcase. The leather is gorgeous and the organization is perfect for my daily needs."
+                    },
+                    {
+                        author: "Thomas B.",
+                        rating: 5,
+                        date: "2 weeks ago",
+                        text: "Worth every penny. The craftsmanship is outstanding and it looks very professional for meetings."
+                    }
+                ]
+            },
+            {
+                id: 4,
+                name: "Distressed Messenger Bag",
+                category: "leather",
+                price: 599,
+                old_price: 799,
+                image: "https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format",
+                badge: "NEW",
+                rating: 4,
+                review_count: 9,
+                description: "Hand-distressed finish for a rugged sophisticated look. Adjustable strap and multiple compartments for everyday convenience.",
+                full_description: "This Distressed Messenger Bag combines rugged durability with sophisticated style. The hand-distressed leather gives each bag a unique, worn-in character that tells its own story. Perfect for daily commutes or casual outings, this messenger bag features an adjustable strap for comfortable crossbody wear and multiple compartments to keep your essentials organized. The weathered look pairs perfectly with both casual and smart-casual attire.",
+                features: [
+                    "Hand-distressed leather finish",
+                    "Adjustable crossbody strap",
+                    "Front flap with magnetic closure",
+                    "Main compartment with zip closure",
+                    "Back zip pocket for quick access",
+                    "Interior organizer pockets",
+                    "Rugged brass hardware",
+                    "Water-resistant finish"
+                ],
+                specifications: {
+                    material: "Distressed Cowhide Leather",
+                    dimensions: '14" W x 10" H x 3" D',
+                    hardware: "Brass with Aged Finish",
+                    strap_drop: "Adjustable up to 24\"",
+                    interior: "Main compartment, 2 slip pockets, 1 zip pocket",
+                    weight: "2.2 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Magnetic snap and strap",
+                    lining: "Cotton canvas"
+                },
+                reviews: [
+                    {
+                        author: "Chris P.",
+                        rating: 4,
+                        date: "3 days ago",
+                        text: "Great everyday bag. The distressed look is perfect and it's very comfortable to wear."
+                    }
+                ]
+            },
+            {
+                id: 5,
+                name: "Vintage Leather Portfolio",
+                category: "business",
+                price: 399,
+                old_price: 549,
+                image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format",
+                badge: "BEST VALUE",
+                rating: 4,
+                review_count: 32,
+                description: "Vintage-style leather with tablet pocket. Professional and elegant for meetings and presentations, fits perfectly in your hand.",
+                full_description: "The Vintage Leather Portfolio is the perfect accessory for professionals who appreciate understated elegance. Compact yet functional, this portfolio holds a tablet, documents, and writing instruments in a sleek leather package. The vintage finish adds character while maintaining a professional appearance suitable for any business setting. Whether walking into a meeting or presenting to clients, this portfolio makes a subtle statement of quality and taste.",
+                features: [
+                    "Vintage-finished leather",
+                    "Padded tablet pocket (fits 11\")",
+                    "Document storage compartment",
+                    "Pen loops and card slots",
+                    "Elastic closure strap",
+                    "Compact, hand-held design",
+                    "Professional appearance",
+                    "Includes notepad"
+                ],
+                specifications: {
+                    material: "Vintage-Finished Leather",
+                    dimensions: '11" W x 9" H x 1" D',
+                    hardware: "Brass Accents",
+                    strap_drop: "Hand-held only",
+                    interior: "Tablet pocket, document slot, 2 pen loops, 3 card slots",
+                    weight: "1.5 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Elastic strap",
+                    lining: "Soft microfiber"
+                },
+                reviews: [
+                    {
+                        author: "Patricia M.",
+                        rating: 4,
+                        date: "1 week ago",
+                        text: "Perfect for meetings. Looks professional and holds everything I need."
+                    },
+                    {
+                        author: "Steven C.",
+                        rating: 4,
+                        date: "2 weeks ago",
+                        text: "Great quality for the price. The leather feels nice and it's very practical."
+                    }
+                ]
+            },
+
+            // Handbags Collection (6-10)
+            {
+                id: 6,
+                name: "Designer Shoulder Bag",
+                category: "handbag",
+                price: 1599,
+                old_price: 2199,
+                image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&auto=format",
+                badge: "EXCLUSIVE",
+                rating: 5,
+                review_count: 11,
+                description: "Signature gold hardware and multiple compartments. Luxury redefined with premium materials and impeccable craftsmanship.",
+                full_description: "The Designer Shoulder Bag exemplifies luxury craftsmanship with its premium materials and attention to detail. Featuring signature gold-toned hardware and a structured silhouette, this bag makes a statement of refined taste. The interior is thoughtfully designed with multiple compartments to organize your essentials, while the exterior showcases flawless leather work. Each bag is individually numbered and comes with a certificate of authenticity.",
+                features: [
+                    "Premium calfskin leather",
+                    "Signature gold hardware",
+                    "Three interior compartments",
+                    "Back wall zip pocket",
+                    "Detachable shoulder strap",
+                    "Protective metal feet",
+                    "Key bell and lock set",
+                    "Includes dust bag and certificate"
+                ],
+                specifications: {
+                    material: "Premium Calfskin Leather",
+                    dimensions: '13" W x 9" H x 5" D',
+                    hardware: "Solid Brass with Gold Finish",
+                    strap_drop: '8" (handle), 12" (shoulder strap)',
+                    interior: "3 compartments, 1 zip pocket, 2 slip pockets",
+                    weight: "2.9 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Turn-lock closure",
+                    lining: "Leather-lined interior"
+                },
+                reviews: [
+                    {
+                        author: "Isabella F.",
+                        rating: 5,
+                        date: "5 days ago",
+                        text: "Absolutely gorgeous bag! The leather is incredible and the gold hardware is stunning."
+                    },
+                    {
+                        author: "Sophia R.",
+                        rating: 5,
+                        date: "2 weeks ago",
+                        text: "Worth the investment. The craftsmanship is exceptional and it elevates any outfit."
+                    }
+                ]
+            },
+            {
+                id: 7,
+                name: "Quilted Chain Handbag",
+                category: "handbag",
+                price: 1899,
+                old_price: 2499,
+                image: "https://images.unsplash.com/photo-1584917865448-de89fe76cc2b?w=600&auto=format",
+                badge: "SIGNATURE",
+                rating: 5,
+                review_count: 8,
+                description: "Diamond stitching and signature chain strap. The epitome of elegance and sophistication in a classic design.",
+                full_description: "The Quilted Chain Handbag features the iconic diamond stitching that has become synonymous with luxury. Each stitch is precisely placed by skilled artisans to create the perfect quilted pattern. The chain strap adds a touch of glamour while providing versatile wearing options - wear it doubled as a shoulder bag or extended as a crossbody. The interior is surprisingly spacious with multiple pockets for organization.",
+                features: [
+                    "Premium lambskin leather",
+                    "Signature diamond quilting",
+                    "Interwoven chain strap",
+                    "Leather and chain shoulder strap",
+                    "Front flap with turn-lock closure",
+                    "Multiple interior pockets",
+                    "Protective metal feet",
+                    "Includes mirror and dust bag"
+                ],
+                specifications: {
+                    material: "Premium Lambskin Leather",
+                    dimensions: '12" W x 8" H x 3" D',
+                    hardware: "Gold-Tone Metal",
+                    strap_drop: "9\" (double chain), 18\" (single chain)",
+                    interior: "Main compartment, 1 zip pocket, 2 slip pockets",
+                    weight: "2.3 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Turn-lock under flap",
+                    lining: "Microfiber with leather trim"
+                },
+                reviews: [
+                    {
+                        author: "Victoria W.",
+                        rating: 5,
+                        date: "1 week ago",
+                        text: "The quilting is perfect and the leather is so soft. My new favorite bag!"
+                    }
+                ]
+            },
+            {
+                id: 8,
+                name: "Structured Top Handle Bag",
+                category: "handbag",
+                price: 999,
+                old_price: 1399,
+                image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format",
+                badge: "NEW",
+                rating: 4,
+                review_count: 7,
+                description: "Premium calfskin leather with rigid top handle. Perfect for formal occasions and business meetings with a structured silhouette.",
+                full_description: "The Structured Top Handle Bag commands attention with its architectural silhouette and impeccable construction. Made from premium calfskin leather, this bag maintains its shape while providing elegant storage for your essentials. The rigid top handle allows for graceful carrying, while the detachable shoulder strap offers versatility. Perfect for formal events, business meetings, or any occasion requiring refined style.",
+                features: [
+                    "Structured calfskin leather",
+                    "Rigid top handle",
+                    "Detachable shoulder strap",
+                    "Signature gold lock",
+                    "Organized interior compartments",
+                    "Protective metal feet",
+                    "Maintains shape when empty",
+                    "Includes protective dust bag"
+                ],
+                specifications: {
+                    material: "Structured Calfskin Leather",
+                    dimensions: '11" W x 7" H x 4" D',
+                    hardware: "Gold-Plated Brass",
+                    strap_drop: '4" (handle), 12" (shoulder strap)',
+                    interior: "2 compartments, 1 zip pocket, 2 slip pockets",
+                    weight: "2.6 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Lock and key",
+                    lining: "Suede microfiber"
+                },
+                reviews: [
+                    {
+                        author: "Natalie B.",
+                        rating: 4,
+                        date: "3 days ago",
+                        text: "Beautiful structured bag. Holds its shape perfectly and looks very elegant."
+                    }
+                ]
+            },
+            {
+                id: 9,
+                name: "Convertible Hobo Bag",
+                category: "handbag",
+                price: 699,
+                old_price: 949,
+                image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&auto=format",
+                badge: "VERSATILE",
+                rating: 5,
+                review_count: 22,
+                description: "Wear as shoulder bag, crossbody, or clutch. Adaptable design for any occasion with its convertible strap system.",
+                full_description: "The Convertible Hobo Bag offers exceptional versatility with its innovative strap system. Wear it as a classic hobo on the shoulder, extend the strap for crossbody comfort, or remove it entirely to use as an elegant clutch. The slouchy silhouette is crafted from soft, supple leather that molds to your body for comfortable carrying. Multiple wearing options make this bag perfect for transitioning from day to night.",
+                features: [
+                    "Soft, slouchy leather",
+                    "Convertible strap system",
+                    "Three wearing options",
+                    "Magnetic closure",
+                    "Spacious main compartment",
+                    "Interior zip pocket",
+                    "Removable strap",
+                    "Lightweight design"
+                ],
+                specifications: {
+                    material: "Soft Calfskin Leather",
+                    dimensions: '13" W x 11" H x 3" D',
+                    hardware: "Silver-Tone Metal",
+                    strap_drop: "10\" (shoulder), 22\" (crossbody), removable for clutch",
+                    interior: "Main compartment, 1 zip pocket",
+                    weight: "2.0 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Magnetic snap",
+                    lining: "Cotton twill"
+                },
+                reviews: [
+                    {
+                        author: "Megan T.",
+                        rating: 5,
+                        date: "1 week ago",
+                        text: "Love how versatile this bag is! Perfect for work and then transitions to evening."
+                    },
+                    {
+                        author: "Rachel K.",
+                        rating: 5,
+                        date: "3 weeks ago",
+                        text: "The leather is so soft and the convertible feature is genius. Great value!"
+                    }
+                ]
+            },
+            {
+                id: 10,
+                name: "Mini Chain Crossbody",
+                category: "handbag",
+                price: 449,
+                old_price: 599,
+                image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&auto=format",
+                badge: "TRENDING",
+                rating: 4,
+                review_count: 31,
+                description: "Mini crossbody with detachable chain strap. Compact yet spacious enough for essentials, perfect for evenings out.",
+                full_description: "The Mini Chain Crossbody proves that good things come in small packages. Despite its compact size, this bag holds all your essentials - phone, cards, keys, and lipstick - with room to spare. The detachable chain strap adds a touch of glamour while providing secure carrying. Perfect for evenings out, events, or any time you want to travel light without sacrificing style.",
+                features: [
+                    "Compact yet spacious design",
+                    "Detachable chain strap",
+                    "Front flap with magnetic closure",
+                    "Back slip pocket for phone",
+                    "Interior card slots",
+                    "Gold-tone hardware",
+                    "Perfect for evenings",
+                    "Lightweight construction"
+                ],
+                specifications: {
+                    material: "Calfskin Leather",
+                    dimensions: '8" W x 5" H x 2" D',
+                    hardware: "Gold-Tone Metal",
+                    strap_drop: "23\" chain (adjustable)",
+                    interior: "Main compartment, 3 card slots, 1 slip pocket",
+                    weight: "1.2 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Magnetic snap",
+                    lining: "Microfiber"
+                },
+                reviews: [
+                    {
+                        author: "Amanda P.",
+                        rating: 4,
+                        date: "2 days ago",
+                        text: "Perfect little bag for nights out. Fits my phone and cards perfectly."
+                    },
+                    {
+                        author: "Jessica L.",
+                        rating: 4,
+                        date: "1 week ago",
+                        text: "Cute and functional. The chain strap adds a nice touch."
+                    }
+                ]
+            },
+
+            // Backpacks Collection (11-15)
+            {
+                id: 11,
+                name: "Premium Travel Backpack",
+                category: "backpack",
+                price: 599,
+                old_price: 799,
+                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
+                badge: "TRAVEL PRO",
+                rating: 5,
+                review_count: 27,
+                description: "USB charging port and RFID-blocking pockets. Perfect for modern travelers who need connectivity and security.",
+                full_description: "The Premium Travel Backpack combines luxury materials with modern technology for the ultimate travel companion. Features include a built-in USB charging port for on-the-go power, RFID-blocking pockets to protect your personal information, and a padded laptop compartment. The premium leather exterior provides durability and style, while the organized interior keeps all your travel essentials in place.",
+                features: [
+                    "Premium leather exterior",
+                    "Built-in USB charging port",
+                    "RFID-blocking security pocket",
+                    "Padded laptop compartment (fits 17\")",
+                    "Multiple organizational pockets",
+                    "Luggage strap for suitcase attachment",
+                    "Breathable back padding",
+                    "Water bottle pockets"
+                ],
+                specifications: {
+                    material: "Premium Leather with Nylon",
+                    dimensions: '18" H x 12" W x 6" D',
+                    hardware: "Black Nickel",
+                    strap_drop: "Adjustable padded straps",
+                    interior: "Laptop sleeve, tablet pocket, RFID pocket, organizer panel",
+                    weight: "3.0 lbs",
+                    origin: "Designed in Italy",
+                    closure: "Dual zipper",
+                    lining: "Polyester with RFID protection"
+                },
+                reviews: [
+                    {
+                        author: "Marcus W.",
+                        rating: 5,
+                        date: "1 week ago",
+                        text: "Best travel backpack I've owned. The USB port is a game-changer."
+                    },
+                    {
+                        author: "Elena R.",
+                        rating: 5,
+                        date: "2 weeks ago",
+                        text: "Perfect for work trips. Looks professional and has great organization."
+                    }
+                ]
+            },
+            {
+                id: 12,
+                name: "Laptop Backpack",
+                category: "backpack",
+                price: 399,
+                old_price: 549,
+                image: "https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format",
+                badge: "BEST SELLER",
+                rating: 5,
+                review_count: 43,
+                description: "Padded compartment for up to 15-inch laptops. Ideal for professionals and students who need style and functionality.",
+                full_description: "The Laptop Backpack is designed for the modern professional who refuses to compromise on style. The padded laptop compartment safely secures devices up to 15 inches, while the organized interior keeps documents, chargers, and daily essentials neatly arranged. The sleek leather exterior transitions seamlessly from the office to casual settings, making it a versatile choice for any lifestyle.",
+                features: [
+                    "Premium leather construction",
+                    "Padded laptop compartment (15\")",
+                    "Tablet sleeve",
+                    "Organizer panel for accessories",
+                    "Front zip pocket",
+                    "Adjustable shoulder straps",
+                    "Top handle for carrying",
+                    "Water-resistant finish"
+                ],
+                specifications: {
+                    material: "Full-Grain Leather",
+                    dimensions: '16" H x 11" W x 4" D',
+                    hardware: "Brass",
+                    strap_drop: "Adjustable padded straps",
+                    interior: "Laptop compartment, tablet sleeve, 3 pockets, pen slots",
+                    weight: "2.5 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Zipper",
+                    lining: "Microfiber"
+                },
+                reviews: [
+                    {
+                        author: "Daniel C.",
+                        rating: 5,
+                        date: "3 days ago",
+                        text: "Perfect for everyday use. Comfortable to wear and looks great."
+                    },
+                    {
+                        author: "Lisa M.",
+                        rating: 5,
+                        date: "2 weeks ago",
+                        text: "Excellent quality and very functional. Fits my laptop perfectly."
+                    }
+                ]
+            },
+            {
+                id: 13,
+                name: "Canvas Backpack",
+                category: "backpack",
+                price: 299,
+                old_price: 399,
+                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
+                badge: "CASUAL",
+                rating: 4,
+                review_count: 19,
+                description: "Heavy-duty waxed canvas with leather accents. Durable and stylish for everyday use with a rugged aesthetic.",
+                full_description: "The Canvas Backpack combines rugged durability with refined style. Made from heavy-duty waxed canvas with genuine leather accents, this backpack is built to withstand daily use while developing character over time. The waxed finish provides water resistance, while the leather trim adds a touch of luxury. Perfect for casual outings, school, or weekend adventures.",
+                features: [
+                    "Heavy-duty waxed canvas",
+                    "Genuine leather accents",
+                    "Water-resistant finish",
+                    "Leather bottom panel",
+                    "Adjustable leather straps",
+                    "Front pocket with buckle",
+                    "Internal laptop sleeve",
+                    "Brass hardware"
+                ],
+                specifications: {
+                    material: "Waxed Canvas with Leather Trim",
+                    dimensions: '17" H x 12" W x 5" D',
+                    hardware: "Brass",
+                    strap_drop: "Adjustable leather straps",
+                    interior: "Main compartment, laptop sleeve, 2 pockets",
+                    weight: "2.2 lbs",
+                    origin: "Handcrafted",
+                    closure: "Leather strap and buckle",
+                    lining: "Cotton canvas"
+                },
+                reviews: [
+                    {
+                        author: "Kevin S.",
+                        rating: 4,
+                        date: "1 week ago",
+                        text: "Great casual backpack. The waxed canvas feels durable and the leather accents are nice."
+                    }
+                ]
+            },
+            {
+                id: 14,
+                name: "Hiking Backpack",
+                category: "backpack",
+                price: 449,
+                old_price: 599,
+                image: "https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format",
+                badge: "OUTDOOR",
+                rating: 5,
+                review_count: 14,
+                description: "Waterproof with ventilation system. Perfect for outdoor adventures and hiking with comfort features.",
+                full_description: "The Hiking Backpack is engineered for outdoor performance without sacrificing style. The waterproof construction keeps your gear dry in all conditions, while the ventilation system ensures comfort during strenuous activities. Multiple compartments allow for organized packing of hiking essentials, and the ergonomic design distributes weight evenly for all-day comfort on the trail.",
+                features: [
+                    "Waterproof construction",
+                    "Ventilated back panel",
+                    "Ergonomic shoulder straps",
+                    "Chest and waist straps",
+                    "Hydration reservoir compatible",
+                    "Multiple exterior pockets",
+                    "Hiking pole attachments",
+                    "Reflective accents"
+                ],
+                specifications: {
+                    material: "Waterproof Nylon with Leather Trim",
+                    dimensions: '20" H x 13" W x 8" D',
+                    hardware: "Black Metal",
+                    strap_drop: "Adjustable ergonomic straps",
+                    interior: "Main compartment, hydration sleeve, organizer pockets",
+                    weight: "2.8 lbs",
+                    origin: "Designed in Italy",
+                    closure: "Dual zipper",
+                    lining: "Waterproof nylon"
+                },
+                reviews: [
+                    {
+                        author: "Trevor N.",
+                        rating: 5,
+                        date: "4 days ago",
+                        text: "Excellent hiking backpack. Comfortable even when fully loaded."
+                    }
+                ]
+            },
+            {
+                id: 15,
+                name: "Vintage Leather Backpack",
+                category: "backpack",
+                price: 699,
+                old_price: 899,
+                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
+                badge: "PREMIUM",
+                rating: 5,
+                review_count: 16,
+                description: "Full-grain leather that develops beautiful patina. Ages gracefully over time, becoming more beautiful with use.",
+                full_description: "The Vintage Leather Backpack is crafted from full-grain leather that will develop a rich patina over years of use, making each bag uniquely yours. The classic design features brass hardware and thoughtful details that enhance both form and function. The interior is fully lined with multiple pockets for organization. This backpack is an investment piece that will last a lifetime and look better with age.",
+                features: [
+                    "Full-grain leather",
+                    "Develops natural patina",
+                    "Solid brass hardware",
+                    "Adjustable leather straps",
+                    "Front pocket with buckle",
+                    "Internal laptop sleeve",
+                    "Leather drawstring closure",
+                    "Fully lined interior"
+                ],
+                specifications: {
+                    material: "Full-Grain Leather",
+                    dimensions: '15" H x 11" W x 5" D',
+                    hardware: "Solid Brass",
+                    strap_drop: "Adjustable leather straps",
+                    interior: "Main compartment, laptop sleeve, 2 zip pockets",
+                    weight: "3.0 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Leather drawstring and buckle",
+                    lining: "Premium cotton"
+                },
+                reviews: [
+                    {
+                        author: "Gregory P.",
+                        rating: 5,
+                        date: "2 weeks ago",
+                        text: "Beautiful backpack that will only get better with age. Excellent craftsmanship."
+                    }
+                ]
+            },
+
+            // Evening & Clutch Collection (16-18)
+            {
+                id: 16,
+                name: "Evening Crystal Clutch",
+                category: "evening",
+                price: 1299,
+                old_price: 1899,
+                image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&auto=format",
+                badge: "LUXURY",
+                rating: 5,
+                review_count: 7,
+                description: "Hand-set with Swarovski crystals for special occasions. Makes a stunning statement for galas and formal events.",
+                full_description: "The Evening Crystal Clutch is a masterpiece of craftsmanship, featuring hundreds of hand-set Swarovski crystals that catch the light from every angle. Each crystal is individually placed by skilled artisans to create a dazzling pattern that ensures you'll shine at any formal event. The interior is lined with luxurious satin and includes a small mirror for touch-ups. This clutch is more than an accessory—it's a work of art.",
+                features: [
+                    "Hand-set Swarovski crystals",
+                    "Crystal-encrusted design",
+                    "Satin-lined interior",
+                    "Magnetic closure",
+                    "Includes matching mirror",
+                    "Removable chain strap",
+                    "Protective dust bag",
+                    "Certificate of authenticity"
+                ],
+                specifications: {
+                    material: "Swarovski Crystals on Metal Frame",
+                    dimensions: '7" W x 4" H x 2" D',
+                    hardware: "Rhodium-Plated",
+                    strap_drop: "Removable chain, 20\"",
+                    interior: "Main compartment, 1 slip pocket",
+                    weight: "1.3 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Magnetic snap",
+                    lining: "Satin"
+                },
+                reviews: [
+                    {
+                        author: "Gabriella S.",
+                        rating: 5,
+                        date: "1 week ago",
+                        text: "Absolutely stunning! The crystals are so sparkly and the craftsmanship is impeccable."
+                    }
+                ]
+            },
+            {
+                id: 17,
+                name: "Pearl Embellished Clutch",
+                category: "evening",
+                price: 899,
+                old_price: 1299,
+                image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&auto=format",
+                badge: "LIMITED",
+                rating: 5,
+                review_count: 6,
+                description: "Hand-stitched with freshwater pearls. Elegant and unique for formal events and weddings.",
+                full_description: "The Pearl Embellished Clutch features dozens of genuine freshwater pearls hand-stitched onto the finest satin fabric. Each pearl is carefully selected for its luster and then individually attached by master artisans. The result is a truly unique accessory that exudes timeless elegance. Perfect for weddings, galas, or any occasion where you want to make a sophisticated statement.",
+                features: [
+                    "Genuine freshwater pearls",
+                    "Hand-stitched application",
+                    "Premium satin fabric",
+                    "Framed top with clasp",
+                    "Satin-lined interior",
+                    "Detachable wrist strap",
+                    "Includes protective pouch",
+                    "Limited edition piece"
+                ],
+                specifications: {
+                    material: "Satin with Freshwater Pearls",
+                    dimensions: '8" W x 5" H x 2" D',
+                    hardware: "Gold-Plated Frame",
+                    strap_drop: "Detachable wrist strap",
+                    interior: "Main compartment, 1 card slot",
+                    weight: "1.1 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Frame clasp",
+                    lining: "Satin"
+                },
+                reviews: [
+                    {
+                        author: "Charlotte B.",
+                        rating: 5,
+                        date: "3 days ago",
+                        text: "Exquisite clutch! The pearls are beautiful and the stitching is perfect."
+                    }
+                ]
+            },
+            {
+                id: 18,
+                name: "Gold Metal Clutch",
+                category: "evening",
+                price: 699,
+                old_price: 999,
+                image: "https://images.unsplash.com/photo-1584917865448-de89fe76cc2b?w=600&auto=format",
+                badge: "TRENDING",
+                rating: 4,
+                review_count: 13,
+                description: "Sleek metal design with gold finish. Modern and chic for evening outings and contemporary events.",
+                full_description: "The Gold Metal Clutch offers a modern take on evening elegance. The sleek metal construction features a brilliant gold finish that adds a contemporary edge to any formal outfit. The geometric design is both eye-catching and practical, with enough space for your evening essentials. The interior is lined with soft microfiber to protect your belongings. This clutch is perfect for fashion-forward individuals who appreciate modern design.",
+                features: [
+                    "Sleek metal construction",
+                    "Brilliant gold finish",
+                    "Geometric pattern",
+                    "Magnetic closure",
+                    "Microfiber lining",
+                    "Detachable chain strap",
+                    "Scratch-resistant coating",
+                    "Modern minimalist design"
+                ],
+                specifications: {
+                    material: "Metal with Gold Finish",
+                    dimensions: '7" W x 4" H x 1.5" D',
+                    hardware: "Gold-Tone Metal",
+                    strap_drop: "Detachable chain, 22\"",
+                    interior: "Main compartment",
+                    weight: "1.4 lbs",
+                    origin: "Designed in Italy",
+                    closure: "Magnetic",
+                    lining: "Microfiber"
+                },
+                reviews: [
+                    {
+                        author: "Olivia M.",
+                        rating: 4,
+                        date: "1 week ago",
+                        text: "Very chic and modern. Gets lots of compliments."
+                    }
+                ]
+            },
+
+            // Travel & Weekend Collection (19-20)
+            {
+                id: 19,
+                name: "Weekender Duffle Bag",
+                category: "travel",
+                price: 1099,
+                old_price: 1499,
+                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
+                badge: "LIMITED",
+                rating: 5,
+                review_count: 21,
+                description: "Water-resistant leather with multiple compartments. Perfect for weekend getaways and short trips.",
+                full_description: "The Weekender Duffle Bag is the epitome of travel luxury. Crafted from water-resistant leather, this bag is designed to withstand the rigors of travel while maintaining its elegant appearance. The spacious main compartment holds enough for a weekend away, while multiple pockets keep accessories organized. The comfortable shoulder strap and sturdy handles provide multiple carrying options. Whether heading to a resort or visiting family, this duffle makes a stylish statement.",
+                features: [
+                    "Water-resistant leather",
+                    "Spacious main compartment",
+                    "Exterior zip pocket",
+                    "Interior shoe compartment",
+                    "Interior mesh pockets",
+                    "Adjustable shoulder strap",
+                    "Leather carry handles",
+                    "Protective metal feet"
+                ],
+                specifications: {
+                    material: "Water-Resistant Leather",
+                    dimensions: '22" W x 12" H x 9" D',
+                    hardware: "Brass",
+                    strap_drop: "Adjustable shoulder strap, 5\" handles",
+                    interior: "Main compartment, shoe compartment, 2 mesh pockets, 1 zip pocket",
+                    weight: "3.8 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Dual zipper",
+                    lining: "Cotton canvas"
+                },
+                reviews: [
+                    {
+                        author: "William T.",
+                        rating: 5,
+                        date: "1 week ago",
+                        text: "Perfect weekend bag. Holds everything I need and looks great."
+                    },
+                    {
+                        author: "Victoria H.",
+                        rating: 5,
+                        date: "3 weeks ago",
+                        text: "Excellent quality and very practical. The shoe compartment is a great feature."
+                    }
+                ]
+            },
+            {
+                id: 20,
+                name: "Luxury Travel Duffel",
+                category: "travel",
+                price: 1499,
+                old_price: 1999,
+                image: "https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format",
+                badge: "PREMIUM",
+                rating: 5,
+                review_count: 9,
+                description: "Spacious design with shoe compartment and wet pocket. Ultimate travel companion for longer journeys.",
+                full_description: "The Luxury Travel Duffel is designed for the discerning traveler who demands both style and functionality. The generous size accommodates everything needed for extended trips, while specialized compartments keep items organized. The separate shoe compartment prevents footwear from soiling clothing, and the wet pocket is perfect for toiletries or damp items. Premium materials and construction ensure this duffel will be your travel companion for years to come.",
+                features: [
+                    "Premium full-grain leather",
+                    "Separate shoe compartment",
+                    "Water-resistant wet pocket",
+                    "Multiple interior organizers",
+                    "Exterior document pocket",
+                    "Padded shoulder strap",
+                    "Reinforced handles",
+                    "Luggage ID tag included"
+                ],
+                specifications: {
+                    material: "Full-Grain Leather",
+                    dimensions: '24" W x 14" H x 10" D',
+                    hardware: "Brass",
+                    strap_drop: "Adjustable padded shoulder strap, 6\" handles",
+                    interior: "Main compartment, shoe compartment, wet pocket, 3 zip pockets, 2 slip pockets",
+                    weight: "4.2 lbs",
+                    origin: "Handcrafted in Italy",
+                    closure: "Dual zipper with lock",
+                    lining: "Water-resistant nylon"
+                },
+                reviews: [
+                    {
+                        author: "Alexander P.",
+                        rating: 5,
+                        date: "5 days ago",
+                        text: "The ultimate travel bag. The organization is incredible and the leather is beautiful."
+                    },
+                    {
+                        author: "Catherine L.",
+                        rating: 5,
+                        date: "2 weeks ago",
+                        text: "Worth every penny for frequent travelers. The wet pocket is genius."
+                    }
+                ]
+            }
+        ];
+
+        let currentProduct = null;
+        let selectedColor = 'Brown';
+        const taxRate = 0.1;
+
+        // Get product ID from URL
+        function getProductId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return parseInt(urlParams.get('id'));
+        }
+
+        // Load product details
+        function loadProductDetails() {
+            const productId = getProductId();
+            const spinner = document.getElementById('loadingSpinner');
+            const productDetail = document.getElementById('productDetail');
+            const errorMessage = document.getElementById('errorMessage');
+
+            spinner.style.display = 'block';
+            productDetail.style.display = 'none';
+            errorMessage.style.display = 'none';
+
+            // Simulate loading delay
+            setTimeout(() => {
+                const product = products.find(p => p.id === productId);
+                
+                if (!product) {
+                    spinner.style.display = 'none';
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                currentProduct = product;
+                displayProductDetails(product);
+                loadRelatedProducts(product.category, product.id);
+                
+                spinner.style.display = 'none';
+                productDetail.style.display = 'block';
+            }, 500);
+        }
+
+        // Display product details
+        function displayProductDetails(product) {
+            document.getElementById('mainProductImage').src = product.image;
+            document.getElementById('mainProductImage').alt = product.name;
+            document.getElementById('productName').textContent = product.name;
+            document.getElementById('productCategory').textContent = product.category.charAt(0).toUpperCase() + product.category.slice(1);
+            document.getElementById('productDescription').textContent = product.description;
+            
+            // Price display
+            document.getElementById('currentPrice').textContent = `$${product.price}`;
+            if (product.old_price) {
+                document.getElementById('oldPrice').textContent = `$${product.old_price}`;
+                document.getElementById('oldPrice').style.display = 'inline';
+                const discount = Math.round(((product.old_price - product.price) / product.old_price) * 100);
+                document.getElementById('discountBadge').textContent = `-${discount}%`;
+                document.getElementById('discountBadge').style.display = 'inline-block';
+            } else {
+                document.getElementById('oldPrice').style.display = 'none';
+                document.getElementById('discountBadge').style.display = 'none';
+            }
+
+            // Badge
+            if (product.badge) {
+                document.getElementById('productBadge').textContent = product.badge;
+                document.getElementById('productBadge').style.display = 'inline-block';
+            } else {
+                document.getElementById('productBadge').style.display = 'none';
+            }
+
+            // Rating
+            const ratingContainer = document.getElementById('productRating');
+            ratingContainer.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('i');
+                star.className = i < product.rating ? 'fas fa-star' : 'far fa-star';
+                ratingContainer.appendChild(star);
+            }
+            document.getElementById('ratingCount').textContent = `(${product.review_count || 0} reviews)`;
+
+            // Full description
+            document.getElementById('fullDescription').textContent = product.full_description || product.description;
+
+            // Features
+            const featuresList = document.getElementById('productFeatures');
+            if (product.features && product.features.length > 0) {
+                featuresList.innerHTML = `
+                    <h3>Key Features</h3>
+                    <ul class="features-list">
+                        ${product.features.map(feature => `<li><i class="fas fa-check"></i> ${feature}</li>`).join('')}
+                    </ul>
+                `;
+            }
+
+            // Specifications
+            const specsTable = document.getElementById('specsTable');
+            if (product.specifications) {
+                specsTable.innerHTML = Object.entries(product.specifications).map(([key, value]) => `
+                    <tr>
+                        <td>${key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</td>
+                        <td>${value}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Reviews
+            const reviewsList = document.getElementById('reviewsList');
+            if (product.reviews && product.reviews.length > 0) {
+                document.getElementById('avgRating').textContent = product.rating.toFixed(1);
+                document.getElementById('reviewCount').textContent = `Based on ${product.review_count || product.reviews.length} reviews`;
+                
+                reviewsList.innerHTML = product.reviews.map(review => `
+                    <div class="review-item">
+                        <div class="review-header">
+                            <strong>${review.author}</strong>
+                            <div class="review-rating">
+                                ${Array(5).fill(0).map((_, i) => 
+                                    `<i class="fas fa-star ${i < review.rating ? '' : 'empty'}"></i>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        <p class="review-text">${review.text}</p>
+                        <span class="review-date">Posted ${review.date}</span>
+                    </div>
+                `).join('');
+            } else {
+                reviewsList.innerHTML = '<p class="text-center">No reviews yet. Be the first to review this product!</p>';
+            }
+
+            // Generate thumbnails
+            const thumbnails = document.getElementById('thumbnailImages');
+            thumbnails.innerHTML = `
+                <img src="${product.image}" class="thumbnail active" onclick="changeMainImage('${product.image}', this)">
+                <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format" class="thumbnail" onclick="changeMainImage('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format', this)">
+                <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format" class="thumbnail" onclick="changeMainImage('https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format', this)">
+                <img src="https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format" class="thumbnail" onclick="changeMainImage('https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format', this)">
+            `;
+        }
+
+        // Change main image
+        function changeMainImage(src, element) {
+            document.getElementById('mainProductImage').src = src;
+            document.querySelectorAll('.thumbnail').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Load related products
+        function loadRelatedProducts(category, currentId) {
+            const related = products
+                .filter(p => p.category === category && p.id !== currentId)
+                .slice(0, 4);
+
+            const container = document.getElementById('relatedProducts');
+            
+            if (related.length === 0) {
+                container.parentElement.style.display = 'none';
+                return;
+            }
+
+            container.parentElement.style.display = 'block';
+            container.innerHTML = related.map(product => `
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="${product.image}" alt="${product.name}" class="product-image" onclick="viewProduct(${product.id})">
+                        ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name" onclick="viewProduct(${product.id})">${product.name}</h3>
+                        <div class="product-price-row">
+                            <span class="product-price">$${product.price}</span>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="quickAddToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                            ADD TO CART
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // View product
+        function viewProduct(id) {
+            window.location.href = `product-detail.html?id=${id}`;
+        }
+
+        // Quick add to cart from related
+        function quickAddToCart(product) {
+            addToCartWithProduct(product);
+        }
+
+        // Quantity functions
+        function updateQuantity(change) {
+            const input = document.getElementById('productQuantity');
+            let value = parseInt(input.value) + change;
+            if (value < 1) value = 1;
+            if (value > 10) value = 10;
+            input.value = value;
+        }
+
+        // Color selection
+        function selectColor(color, element) {
+            selectedColor = color;
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Add to cart function
+        function addToCart() {
+            if (!currentProduct) return;
+            
+            const quantity = parseInt(document.getElementById('productQuantity').value);
+            const productToAdd = {
+                ...currentProduct,
+                quantity: quantity,
+                color: selectedColor,
+                addedAt: new Date().toISOString()
+            };
+            
+            addToCartWithProduct(productToAdd);
+        }
+
+        // Helper function to add product to cart
+        function addToCartWithProduct(product) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existingItem = cart.find(item => item.id === product.id && item.color === product.color);
+            
+            if (existingItem) {
+                existingItem.quantity = (existingItem.quantity || 1) + (product.quantity || 1);
+            } else {
+                cart.push(product);
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            showNotification(`${product.quantity || 1} × ${product.name} added to cart!`, 'success');
+        }
+
+        // Buy Now function
+        function buyNow() {
+            if (!currentProduct) return;
+            
+            const quantity = parseInt(document.getElementById('productQuantity').value);
+            const productToBuy = {
+                ...currentProduct,
+                quantity: quantity,
+                color: selectedColor
+            };
+            
+            // Open payment modal
+            openPaymentModal(productToBuy);
+        }
+
+        // Payment Modal Functions
+        function openPaymentModal(product) {
+            const modal = document.getElementById('paymentModal');
+            
+            // Calculate totals
+            const subtotal = product.price * product.quantity;
+            const shipping = subtotal > 500 ? 0 : 10;
+            const tax = subtotal * taxRate;
+            const total = subtotal + shipping + tax;
+            
+            // Display product details in modal
+            document.getElementById('paymentProductDetails').innerHTML = `
+                <div class="modal-product">
+                    <img src="${product.image}" alt="${product.name}" class="modal-product-image">
+                    <div class="modal-product-details">
+                        <h4>${product.name}</h4>
+                        <p>Color: ${product.color} | Quantity: ${product.quantity}</p>
+                        <p class="modal-product-price">$${product.price} each</p>
+                    </div>
+                </div>
+            `;
+            
+            // Update totals
+            document.getElementById('paymentSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('paymentShipping').textContent = shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`;
+            document.getElementById('paymentTax').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('paymentTotal').textContent = `$${total.toFixed(2)}`;
+            
+            // Store product for order
+            modal.dataset.product = JSON.stringify(product);
+            modal.dataset.total = total;
+            
+            // Show modal
+            modal.style.display = 'flex';
+            
+            // Pre-fill shipping if user is logged in
+            if (isAuthenticated()) {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                if (user.full_name) document.getElementById('shippingName').value = user.full_name || '';
+                if (user.address) document.getElementById('shippingAddress').value = user.address || '';
+                if (user.phone) document.getElementById('shippingPhone').value = user.phone || '';
+            }
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        function showPaymentForm(method) {
+            document.getElementById('cardPaymentForm').style.display = 'none';
+            document.getElementById('paypalForm').style.display = 'none';
+            document.getElementById('codForm').style.display = 'none';
+            
+            if (method === 'credit_card' || method === 'debit_card') {
+                document.getElementById('cardPaymentForm').style.display = 'block';
+            } else if (method === 'paypal') {
+                document.getElementById('paypalForm').style.display = 'block';
+            } else if (method === 'cash_on_delivery') {
+                document.getElementById('codForm').style.display = 'block';
+            }
+        }
+
+        // Format card number with spaces
+        function formatCardNumber(input) {
+            let value = input.value.replace(/\s/g, '').replace(/\D/g, '').substring(0, 16);
+            let formatted = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                formatted += value[i];
+            }
+            input.value = formatted;
+        }
+
+        function formatExpiryDate(input) {
+            let value = input.value.replace(/\D/g, '').substring(0, 4);
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2);
+            }
+            input.value = value;
+        }
+
+        // Process payment and create order
+        function processPayment() {
+            const modal = document.getElementById('paymentModal');
+            const product = JSON.parse(modal.dataset.product);
+            const total = parseFloat(modal.dataset.total);
+            
+            // Validate shipping information
+            const shippingName = document.getElementById('shippingName').value;
+            const shippingAddress = document.getElementById('shippingAddress').value;
+            const shippingCity = document.getElementById('shippingCity').value;
+            const shippingState = document.getElementById('shippingState').value;
+            const shippingZip = document.getElementById('shippingZip').value;
+            const shippingPhone = document.getElementById('shippingPhone').value;
+            
+            if (!shippingName || !shippingAddress || !shippingCity || !shippingState || !shippingZip || !shippingPhone) {
+                showNotification('Please fill in all shipping information', 'error');
+                return;
+            }
+            
+            // Validate payment method
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            
+            if (paymentMethod === 'credit_card' || paymentMethod === 'debit_card') {
+                const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+                const expiryDate = document.getElementById('expiryDate').value;
+                const cvv = document.getElementById('cvv').value;
+                const cardName = document.getElementById('cardName').value;
+                
+                if (!cardNumber || cardNumber.length < 16) {
+                    showNotification('Please enter a valid card number', 'error');
+                    return;
+                }
+                if (!expiryDate || expiryDate.length < 5) {
+                    showNotification('Please enter a valid expiry date', 'error');
+                    return;
+                }
+                if (!cvv || cvv.length < 3) {
+                    showNotification('Please enter a valid CVV', 'error');
+                    return;
+                }
+                if (!cardName) {
+                    showNotification('Please enter the name on card', 'error');
+                    return;
+                }
+            }
+            
+            // Show loading
+            showNotification('Processing your order...', 'info');
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                // Create order
+                const order = {
+                    id: 'ORD-' + Date.now(),
+                    date: new Date().toISOString(),
+                    product: product,
+                    shipping: {
+                        name: shippingName,
+                        address: shippingAddress,
+                        city: shippingCity,
+                        state: shippingState,
+                        zip: shippingZip,
+                        phone: shippingPhone
+                    },
+                    paymentMethod: paymentMethod,
+                    subtotal: product.price * product.quantity,
+                    shipping: product.price * product.quantity > 500 ? 0 : 10,
+                    tax: (product.price * product.quantity) * taxRate,
+                    total: total,
+                    status: 'processing',
+                    paymentStatus: 'completed'
+                };
+                
+                // Save order to localStorage
+                saveOrder(order);
+                
+                // Close modal
+                closePaymentModal();
+                
+                // Show success message
+                showNotification('Order placed successfully! Redirecting to confirmation...', 'success');
+                
+                // Redirect to order confirmation page
+                setTimeout(() => {
+                    window.location.href = 'order-confirmation.html?id=' + order.id;
+                }, 2000);
+            }, 2000);
+        }
+
+        // Save order to localStorage
+        function saveOrder(order) {
+            let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
+            // Also save to user's orders if logged in
+            if (isAuthenticated()) {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                user.orders = user.orders || [];
+                user.orders.push(order.id);
+                localStorage.setItem('user', JSON.stringify(user));
+            }
+        }
+
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tab + 'Tab').classList.add('active');
+        }
+
+        // Write review
+        function writeReview() {
+            if (!isAuthenticated()) {
+                sessionStorage.setItem('redirectAfterLogin', window.location.href);
+                window.location.href = 'login.html';
+                return;
+            }
+            showNotification('Review feature coming soon!', 'info');
+        }
+
+        // Add to wishlist
+        function addToWishlist() {
+            if (!currentProduct) return;
+            
+            let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            if (!wishlist.some(item => item.id === currentProduct.id)) {
+                wishlist.push(currentProduct);
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                showNotification('Added to wishlist!', 'success');
+            } else {
+                showNotification('Already in wishlist!', 'info');
+            }
+        }
+
+        // Show notification function
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = count;
+            });
+        }
+
+        // Check authentication
+        function isAuthenticated() {
+            return !!localStorage.getItem('token');
+        }
+
+        // Add modal styles
+        function addModalStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    backdrop-filter: blur(10px);
+                    z-index: 2000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    animation: fadeIn 0.3s ease;
+                }
+                
+                .modal-content {
+                    background: var(--gradient-card);
+                    border: 2px solid var(--accent-gold);
+                    border-radius: var(--radius-lg);
+                    max-width: 600px;
+                    width: 90%;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    position: relative;
+                    animation: slideUp 0.3s ease;
+                }
+                
+                .modal-header {
+                    padding: 1.5rem;
+                    border-bottom: 1px solid var(--border-light);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    position: sticky;
+                    top: 0;
+                    background: var(--gradient-card);
+                    z-index: 10;
+                }
+                
+                .modal-header h2 {
+                    margin: 0;
+                    font-size: 1.5rem;
+                }
+                
+                .modal-header h2::after {
+                    display: none;
+                }
+                
+                .modal-close {
+                    background: none;
+                    border: none;
+                    color: var(--text-primary);
+                    font-size: 2rem;
+                    cursor: pointer;
+                    transition: color 0.3s ease;
+                }
+                
+                .modal-close:hover {
+                    color: var(--accent-gold);
+                }
+                
+                .modal-body {
+                    padding: 1.5rem;
+                }
+                
+                .modal-footer {
+                    padding: 1.5rem;
+                    border-top: 1px solid var(--border-light);
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 1rem;
+                    position: sticky;
+                    bottom: 0;
+                    background: var(--gradient-card);
+                }
+                
+                .modal-product {
+                    display: flex;
+                    gap: 1rem;
+                    padding: 1rem;
+                    background: var(--bg-card);
+                    border-radius: var(--radius-lg);
+                    margin-bottom: 1.5rem;
+                }
+                
+                .modal-product-image {
+                    width: 80px;
+                    height: 80px;
+                    object-fit: cover;
+                    border-radius: var(--radius-md);
+                }
+                
+                .modal-product-details h4 {
+                    margin-bottom: 0.3rem;
+                }
+                
+                .modal-product-price {
+                    color: var(--accent-gold);
+                    font-weight: bold;
+                    margin-top: 0.3rem;
+                }
+                
+                .payment-options {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 1rem;
+                    margin: 1rem 0;
+                }
+                
+                .payment-option {
+                    background: var(--bg-card);
+                    border: 2px solid var(--border-light);
+                    border-radius: var(--radius-lg);
+                    padding: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+                
+                .payment-option:hover {
+                    border-color: var(--accent-gold);
+                    transform: translateY(-2px);
+                }
+                
+                .payment-option input[type="radio"] {
+                    width: auto;
+                    margin-right: 0.5rem;
+                }
+                
+                .payment-option i {
+                    font-size: 1.2rem;
+                    color: var(--accent-gold);
+                }
+                
+                .payment-form {
+                    background: var(--bg-card);
+                    border-radius: var(--radius-lg);
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                }
+                
+                .payment-total {
+                    background: var(--bg-card);
+                    border-radius: var(--radius-lg);
+                    padding: 1.5rem;
+                    margin-top: 1.5rem;
+                }
+                
+                .total-row {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 0.5rem 0;
+                }
+                
+                .grand-total {
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    color: var(--accent-gold);
+                    border-top: 1px solid var(--border-light);
+                    margin-top: 0.5rem;
+                    padding-top: 1rem;
+                }
+                
+                .paypal-info, .cod-info {
+                    text-align: center;
+                    padding: 1rem;
+                }
+                
+                .note {
+                    color: var(--text-muted);
+                    font-size: 0.9rem;
+                    margin-top: 0.5rem;
+                }
+                
+                .notification {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    background: var(--gradient-card);
+                    border: 2px solid var(--accent-gold);
+                    border-radius: var(--radius-lg);
+                    color: var(--text-primary);
+                    box-shadow: var(--shadow-gold);
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    animation: slideIn 0.3s ease;
+                }
+                
+                .notification-success {
+                    border-color: var(--success);
+                }
+                
+                .notification-error {
+                    border-color: var(--danger);
+                }
+                
+                .notification-info {
+                    border-color: var(--accent-gold);
+                }
+                
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                
+                @keyframes slideUp {
+                    from {
+                        transform: translateY(50px);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            addModalStyles();
+            loadProductDetails();
+            updateCartCount();
+        });
+
+        // Click outside modal to close
+        window.onclick = function(event) {
+            const modal = document.getElementById('paymentModal');
+            if (event.target === modal) {
+                closePaymentModal();
+            }
+        };
+    </script>
+</body>
+</html>

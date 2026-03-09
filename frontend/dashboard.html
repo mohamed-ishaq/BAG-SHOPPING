@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - LUXURY BAGS</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">LUXURY BAGS</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Collection</a>
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="#" onclick="logout()">Logout</a>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="dashboard-sidebar">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <img src="" alt="Profile" id="profileAvatar">
+                    <div class="avatar-edit" onclick="document.getElementById('avatarUpload').click()">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadAvatar(this)">
+                </div>
+                <h3 id="userFullName">Loading...</h3>
+                <p class="user-email" id="userEmail">loading@email.com</p>
+                <p class="user-member-since">Member since <span id="memberSince">2024</span></p>
+            </div>
+
+            <div class="sidebar-menu">
+                <a href="#" class="menu-item active" data-section="overview">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard Overview</span>
+                </a>
+                <a href="#" class="menu-item" data-section="orders">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>My Orders</span>
+                    <span class="menu-badge" id="orderCount">0</span>
+                </a>
+                <a href="#" class="menu-item" data-section="profile">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Profile Settings</span>
+                </a>
+                <a href="#" class="menu-item" data-section="wishlist">
+                    <i class="fas fa-heart"></i>
+                    <span>Wishlist</span>
+                    <span class="menu-badge" id="wishlistCount">0</span>
+                </a>
+                <a href="#" class="menu-item" data-section="addresses">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Saved Addresses</span>
+                </a>
+                <a href="#" class="menu-item" data-section="payment">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Payment Methods</span>
+                </a>
+                <a href="#" class="menu-item" data-section="settings">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Privacy & Security</span>
+                </a>
+            </div>
+
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sign Out</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="dashboard-main">
+            <!-- Overview Section -->
+            <div id="overview" class="dashboard-section active">
+                <div class="section-header">
+                    <h1>Welcome back, <span id="greetingName">Valued Customer</span>! 👋</h1>
+                    <p>Here's what's happening with your account today.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #c5a572, #e4c9a7);">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Total Orders</h3>
+                            <p class="stat-value" id="totalOrders">0</p>
+                            <span class="stat-change positive">↑ 12% this month</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #1a1a2a, #0F3460);">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Total Spent</h3>
+                            <p class="stat-value" id="totalSpent">$0</p>
+                            <span class="stat-change">Lifetime value</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #2c5530, #4CAF50);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Completed Orders</h3>
+                            <p class="stat-value" id="completedOrders">0</p>
+                            <span class="stat-change positive">↑ 8% success rate</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #c5a572, #e4c9a7);">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Loyalty Points</h3>
+                            <p class="stat-value" id="loyaltyPoints">250</p>
+                            <span class="stat-change">Earn more points</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="recent-orders">
+                    <div class="section-header" style="margin-bottom: 1.5rem;">
+                        <h2>Recent Orders</h2>
+                        <a href="#" class="view-all" data-section="orders">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div class="orders-table-container">
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Date</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersTable">
+                                <tr>
+                                    <td colspan="6" class="text-center">Loading orders...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <div id="orders" class="dashboard-section">
+                <div class="section-header">
+                    <h1>My Orders</h1>
+                </div>
+
+                <div class="orders-list" id="ordersList">
+                    <!-- Orders will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Profile Settings Section -->
+            <div id="profile" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Profile Settings</h1>
+                    <p>Manage your personal information</p>
+                </div>
+
+                <div class="checkout-section">
+                    <form id="profileForm" onsubmit="updateProfile(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" id="profileUsername" readonly disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="profileEmail" readonly disabled>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="profileFullName" placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" id="profilePhone" placeholder="Enter your phone number">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <input type="date" id="profileDob">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Bio</label>
+                            <textarea id="profileBio" rows="4" placeholder="Tell us a little about yourself..."></textarea>
+                        </div>
+
+                        <div class="form-actions" style="display: flex; gap: 1rem;">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" onclick="cancelProfileEdit()">Cancel</button>
+                        </div>
+                    </form>
+
+                    <!-- Change Password Section -->
+                    <div class="password-section" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-light);">
+                        <h3 style="margin-bottom: 1.5rem;">Change Password</h3>
+                        <form id="passwordForm" onsubmit="changePassword(event)">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currentPassword" placeholder="Enter current password">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>New Password</label>
+                                    <input type="password" id="newPassword" placeholder="Enter new password">
+                                </div>
+                                <div class="form-group">
+                                    <label>Confirm New Password</label>
+                                    <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-secondary">Update Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wishlist Section -->
+            <div id="wishlist" class="dashboard-section">
+                <div class="section-header">
+                    <h1>My Wishlist</h1>
+                    <button class="btn btn-secondary" onclick="clearWishlist()">
+                        <i class="fas fa-trash"></i> Clear Wishlist
+                    </button>
+                </div>
+
+                <div class="products-grid" id="wishlistItems">
+                    <!-- Wishlist items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Addresses Section -->
+            <div id="addresses" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Saved Addresses</h1>
+                    <button class="btn btn-primary" onclick="showAddAddress()">
+                        <i class="fas fa-plus"></i> Add New Address
+                    </button>
+                </div>
+
+                <div class="addresses-grid" id="addressesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <!-- Addresses will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Payment Methods Section -->
+            <div id="payment" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Payment Methods</h1>
+                    <button class="btn btn-primary" onclick="showAddPayment()">
+                        <i class="fas fa-plus"></i> Add Payment Method
+                    </button>
+                </div>
+
+                <div class="payment-methods-list" id="paymentMethodsList">
+                    <!-- Payment methods will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Privacy & Security Section -->
+            <div id="settings" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Privacy & Security</h1>
+                </div>
+
+                <div class="checkout-section">
+                    <div class="setting-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; border-bottom: 1px solid var(--border-light);">
+                        <div>
+                            <h3>Two-Factor Authentication</h3>
+                            <p style="color: var(--text-secondary);">Add an extra layer of security to your account</p>
+                        </div>
+                        <label class="switch" style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                            <input type="checkbox" style="opacity: 0; width: 0; height: 0;" onchange="showNotification('2FA feature coming soon!', 'info')">
+                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-light); transition: .4s; border-radius: 34px;"></span>
+                        </label>
+                    </div>
+
+                    <div class="danger-zone" style="margin-top: 2rem; padding: 2rem; background: rgba(220, 38, 38, 0.1); border-radius: var(--radius-md);">
+                        <h3 style="color: var(--danger); margin-bottom: 1rem;">Danger Zone</h3>
+                        <button class="btn btn-secondary" style="border-color: var(--danger); color: var(--danger);" onclick="deactivateAccount()">
+                            <i class="fas fa-exclamation-triangle"></i> Deactivate Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderDetailsModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Order Details</h2>
+                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="orderDetailsContent">
+                <!-- Order details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+                <button class="btn btn-primary" onclick="trackOrder()">Track Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Address Modal -->
+    <div id="addressModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: var(--gradient-card); border: 1px solid var(--border-medium); border-radius: var(--radius-lg); max-width: 500px; width: 90%; padding: 2rem; position: relative;">
+            <button onclick="closeModal('addressModal')" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-primary); font-size: 2rem; cursor: pointer;">&times;</button>
+            <h2 style="margin-bottom: 1.5rem;">Add New Address</h2>
+            <form id="addressForm" onsubmit="saveAddress(event)">
+                <div class="form-group">
+                    <label>Address Label</label>
+                    <input type="text" id="addressLabel" placeholder="e.g., Home, Office" required>
+                </div>
+                <div class="form-group">
+                    <label>Street Address</label>
+                    <input type="text" id="addressStreet" placeholder="Street address" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="addressCity" required>
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <input type="text" id="addressState" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ZIP Code</label>
+                        <input type="text" id="addressZip" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select id="addressCountry">
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="UK">United Kingdom</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Address</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        if (!isAuthenticated()) {
+            window.location.href = 'login.html';
+        }
+
+        // ============================================
+        // SECTION NAVIGATION
+        // ============================================
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.dashboard-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+            }
+            
+            // Update active menu item
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === sectionId) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Load section-specific data
+            if (sectionId === 'wishlist') loadWishlist();
+            if (sectionId === 'addresses') loadAddresses();
+            if (sectionId === 'payment') loadPaymentMethods();
+            if (sectionId === 'orders') loadOrders();
+        }
+
+        // Initialize menu click handlers
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add click handlers to all menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.dataset.section;
+                    showSection(sectionId);
+                    
+                    // Update URL hash without page reload
+                    window.location.hash = sectionId;
+                });
+            });
+            
+            // Add click handlers to "View All" links
+            document.querySelectorAll('.view-all').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.dataset.section;
+                    showSection(sectionId);
+                    window.location.hash = sectionId;
+                });
+            });
+            
+            // Check URL hash for initial section
+            const hash = window.location.hash.substring(1);
+            if (hash && ['overview', 'orders', 'profile', 'wishlist', 'addresses', 'payment', 'settings'].includes(hash)) {
+                showSection(hash);
+            }
+            
+            // Load all data
+            loadUserData();
+            loadOrders();
+            loadWishlist();
+            loadAddresses();
+            loadPaymentMethods();
+            loadProfileAvatar();
+            updateCartCount();
+            
+            // Update navbar based on login status
+            if (isAuthenticated()) {
+                document.querySelectorAll('.login-link').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.logout-link').forEach(el => el.style.display = 'inline-block');
+                document.querySelectorAll('.profile-link').forEach(el => el.style.display = 'inline-block');
+            } else {
+                document.querySelectorAll('.login-link').forEach(el => el.style.display = 'inline-block');
+                document.querySelectorAll('.logout-link').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.profile-link').forEach(el => el.style.display = 'none');
+            }
+        });
+
+        // ============================================
+        // ORDER DETAILS MODAL FUNCTIONS
+        // ============================================
+        function viewOrderDetails(orderId) {
+            // Get orders from localStorage
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) {
+                showNotification('Order not found', 'error');
+                return;
+            }
+            
+            displayOrderDetails(order);
+            document.getElementById('orderDetailsModal').style.display = 'flex';
+        }
+
+        function displayOrderDetails(order) {
+            const content = document.getElementById('orderDetailsContent');
+            
+            // Format date
+            const orderDate = new Date(order.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Calculate totals if not present
+            const subtotal = order.subtotal || (order.product ? order.product.price * (order.product.quantity || 1) : 0);
+            const shipping = order.shipping_cost || (subtotal > 500 ? 0 : 10);
+            const tax = order.tax || (subtotal * 0.1);
+            const total = order.total || (subtotal + shipping + tax);
+            
+            // Format payment method
+            const paymentMethod = formatPaymentMethod(order.paymentMethod);
+            
+            // Get product details
+            const product = order.product || (order.items && order.items[0]) || null;
+            
+            content.innerHTML = `
+                <div class="order-detail-header" style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);">
+                    <h3 style="color: var(--accent-gold); margin-bottom: 0.5rem;">Order #${order.id}</h3>
+                    <p style="color: var(--text-muted);">Placed on ${orderDate}</p>
+                </div>
+                
+                <div class="order-detail-status" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <span class="status-badge status-${order.status || 'processing'}">${order.status || 'Processing'}</span>
+                    <span class="status-badge status-${order.paymentStatus || 'completed'}">Payment: ${order.paymentStatus || 'Completed'}</span>
+                </div>
+                
+                <div class="order-detail-items" style="margin-bottom: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem;">Items</h4>
+                    ${product ? `
+                        <div style="display: flex; gap: 1rem; padding: 1rem; background: var(--bg-card); border-radius: var(--radius-lg);">
+                            <img src="${product.image}" alt="${product.name}" style="width: 80px; height: 80px; object-fit: cover; border-radius: var(--radius-md);">
+                            <div style="flex: 1;">
+                                <h5 style="margin-bottom: 0.3rem;">${product.name}</h5>
+                                <p style="color: var(--text-muted);">Color: ${product.color || 'Brown'} | Quantity: ${product.quantity || 1}</p>
+                                <p style="color: var(--accent-gold);">$${product.price.toFixed(2)} each</p>
+                            </div>
+                            <div style="font-weight: bold; color: var(--accent-gold);">
+                                $${((product.price * (product.quantity || 1)).toFixed(2))}
+                            </div>
+                        </div>
+                    ` : '<p>No items found</p>'}
+                </div>
+                
+                <div class="order-detail-summary" style="margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-card); border-radius: var(--radius-lg);">
+                    <h4 style="margin-bottom: 1rem;">Order Summary</h4>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Subtotal:</span>
+                        <span>$${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Shipping:</span>
+                        <span>${shipping === 0 ? 'Free' : '$' + shipping.toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Tax (10%):</span>
+                        <span>$${tax.toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-light); font-weight: bold; color: var(--accent-gold);">
+                        <span>Total:</span>
+                        <span>$${total.toFixed(2)}</span>
+                    </div>
+                </div>
+                
+                <div class="order-detail-shipping" style="margin-bottom: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem;">Shipping Information</h4>
+                    <div style="padding: 1rem; background: var(--bg-card); border-radius: var(--radius-lg);">
+                        ${order.shipping ? `
+                            <p><strong>Name:</strong> ${order.shipping.name || 'N/A'}</p>
+                            <p><strong>Address:</strong> ${order.shipping.address || 'N/A'}</p>
+                            <p><strong>City:</strong> ${order.shipping.city || 'N/A'}</p>
+                            <p><strong>State:</strong> ${order.shipping.state || 'N/A'}</p>
+                            <p><strong>ZIP:</strong> ${order.shipping.zip || 'N/A'}</p>
+                            <p><strong>Phone:</strong> ${order.shipping.phone || 'N/A'}</p>
+                        ` : '<p>No shipping information available</p>'}
+                    </div>
+                </div>
+                
+                <div class="order-detail-payment">
+                    <h4 style="margin-bottom: 1rem;">Payment Information</h4>
+                    <div style="padding: 1rem; background: var(--bg-card); border-radius: var(--radius-lg);">
+                        <p><strong>Method:</strong> ${paymentMethod}</p>
+                        <p><strong>Status:</strong> <span class="status-badge status-${order.paymentStatus || 'completed'}">${order.paymentStatus || 'Completed'}</span></p>
+                        ${order.paymentMethod === 'credit_card' || order.paymentMethod === 'debit_card' ? 
+                            '<p><strong>Card:</strong> •••• •••• •••• 4242</p>' : ''}
+                        ${order.paymentMethod === 'paypal' ? 
+                            `<p><strong>PayPal Email:</strong> ${order.shipping?.email || 'N/A'}</p>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Store order ID for tracking
+            document.getElementById('orderDetailsModal').dataset.orderId = order.id;
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderDetailsModal').style.display = 'none';
+        }
+
+        function trackOrder() {
+            const orderId = document.getElementById('orderDetailsModal').dataset.orderId;
+            showNotification(`Tracking feature coming soon for order ${orderId}`, 'info');
+        }
+
+        // ============================================
+        // PROFILE AVATAR UPLOAD
+        // ============================================
+        function uploadAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Update avatar in UI
+                    document.getElementById('profileAvatar').src = e.target.result;
+                    
+                    // Save to localStorage
+                    localStorage.setItem('profileAvatar', e.target.result);
+                    
+                    showNotification('Profile picture updated successfully!', 'success');
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function loadProfileAvatar() {
+            const savedAvatar = localStorage.getItem('profileAvatar');
+            if (savedAvatar) {
+                document.getElementById('profileAvatar').src = savedAvatar;
+            } else {
+                // Default avatar
+                document.getElementById('profileAvatar').src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(document.getElementById('userFullName')?.textContent || 'User') + '&background=D4AF37&color=000&size=150';
+            }
+        }
+
+        // ============================================
+        // NOTIFICATION SYSTEM
+        // ============================================
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Add notification and modal styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: var(--gradient-card);
+                border: 2px solid var(--accent-gold);
+                border-radius: var(--radius-lg);
+                color: var(--text-primary);
+                box-shadow: var(--shadow-gold);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                animation: slideIn 0.3s ease;
+            }
+            
+            .notification-success {
+                border-color: var(--success);
+            }
+            
+            .notification-error {
+                border-color: var(--danger);
+            }
+            
+            .notification-info {
+                border-color: var(--accent-gold);
+            }
+            
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: fadeIn 0.3s ease;
+            }
+            
+            .modal-content {
+                background: var(--gradient-card);
+                border: 2px solid var(--accent-gold);
+                border-radius: var(--radius-lg);
+                max-width: 600px;
+                width: 90%;
+                max-height: 90vh;
+                overflow-y: auto;
+                position: relative;
+                animation: slideUp 0.3s ease;
+            }
+            
+            .modal-header {
+                padding: 1.5rem;
+                border-bottom: 1px solid var(--border-light);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                position: sticky;
+                top: 0;
+                background: var(--gradient-card);
+                z-index: 10;
+            }
+            
+            .modal-header h2 {
+                margin: 0;
+                font-size: 1.5rem;
+            }
+            
+            .modal-header h2::after {
+                display: none;
+            }
+            
+            .modal-close {
+                background: none;
+                border: none;
+                color: var(--text-primary);
+                font-size: 2rem;
+                cursor: pointer;
+                transition: color 0.3s ease;
+            }
+            
+            .modal-close:hover {
+                color: var(--accent-gold);
+            }
+            
+            .modal-body {
+                padding: 1.5rem;
+            }
+            
+            .modal-footer {
+                padding: 1.5rem;
+                border-top: 1px solid var(--border-light);
+                display: flex;
+                justify-content: flex-end;
+                gap: 1rem;
+                position: sticky;
+                bottom: 0;
+                background: var(--gradient-card);
+            }
+            
+            .status-badge {
+                display: inline-block;
+                padding: 0.3rem 0.8rem;
+                border-radius: var(--radius-full);
+                font-size: 0.8rem;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+            
+            .status-processing {
+                background: rgba(243, 156, 18, 0.2);
+                color: var(--warning);
+                border: 1px solid var(--warning);
+            }
+            
+            .status-shipped {
+                background: rgba(52, 152, 219, 0.2);
+                color: var(--info);
+                border: 1px solid var(--info);
+            }
+            
+            .status-delivered {
+                background: rgba(46, 204, 113, 0.2);
+                color: var(--success);
+                border: 1px solid var(--success);
+            }
+            
+            .status-completed {
+                background: rgba(46, 204, 113, 0.2);
+                color: var(--success);
+                border: 1px solid var(--success);
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            @keyframes slideUp {
+                from {
+                    transform: translateY(50px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ============================================
+        // USER DATA
+        // ============================================
+        function loadUserData() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const fullName = user.full_name || user.username || 'Valued Customer';
+            const email = user.email || 'customer@luxurybags.com';
+            
+            document.getElementById('userFullName').textContent = fullName;
+            document.getElementById('userEmail').textContent = email;
+            document.getElementById('greetingName').textContent = fullName;
+            
+            document.getElementById('profileUsername').value = user.username || '';
+            document.getElementById('profileEmail').value = email;
+            document.getElementById('profileFullName').value = user.full_name || '';
+            document.getElementById('profilePhone').value = user.phone || '';
+            document.getElementById('profileDob').value = user.dob || '';
+            document.getElementById('profileBio').value = user.bio || '';
+            
+            // Set member since
+            const joinDate = user.createdAt ? new Date(user.createdAt) : new Date();
+            document.getElementById('memberSince').textContent = joinDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+        }
+
+        // ============================================
+        // ORDERS
+        // ============================================
+        function loadOrders() {
+            // Get orders from localStorage
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            
+            document.getElementById('orderCount').textContent = orders.length;
+            document.getElementById('totalOrders').textContent = orders.length;
+            document.getElementById('totalSpent').textContent = '$' + orders.reduce((sum, o) => sum + (o.total || 0), 0);
+            document.getElementById('completedOrders').textContent = orders.filter(o => o.status === 'delivered' || o.paymentStatus === 'completed').length;
+
+            // Recent orders table
+            const recentOrdersTable = document.getElementById('recentOrdersTable');
+            if (orders.length > 0) {
+                recentOrdersTable.innerHTML = orders.slice(0, 3).map(order => {
+                    const product = order.product || (order.items && order.items[0]) || null;
+                    const itemCount = order.items ? order.items.length : (product ? 1 : 0);
+                    
+                    return `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${new Date(order.date).toLocaleDateString()}</td>
+                        <td>${itemCount} item${itemCount !== 1 ? 's' : ''}</td>
+                        <td>$${order.total?.toFixed(2) || 0}</td>
+                        <td><span class="status-badge status-${order.status || 'processing'}">${order.status || 'processing'}</span></td>
+                        <td><button class="order-action-btn" onclick="viewOrderDetails('${order.id}')">View Details</button></td>
+                    </tr>
+                `}).join('');
+            } else {
+                recentOrdersTable.innerHTML = '<tr><td colspan="6" class="text-center">No orders yet</td></tr>';
+            }
+
+            // Orders list
+            const ordersList = document.getElementById('ordersList');
+            if (orders.length > 0) {
+                ordersList.innerHTML = orders.map(order => {
+                    const product = order.product || (order.items && order.items[0]) || null;
+                    
+                    return `
+                    <div class="order-card" style="background: var(--gradient-card); border-radius: var(--radius-lg); margin-bottom: 1rem; overflow: hidden;">
+                        <div class="order-card-header" style="background: var(--primary-dark); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                            <span class="order-number">Order #${order.id}</span>
+                            <span class="status-badge status-${order.status || 'processing'}">${order.status || 'processing'}</span>
+                        </div>
+                        <div class="order-card-body" style="padding: 1.5rem;">
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                ${product ? `
+                                    <img src="${product.image}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: var(--radius-md);">
+                                    <div>
+                                        <h4 style="margin-bottom: 0.3rem;">${product.name}</h4>
+                                        <p style="color: var(--text-muted);">Quantity: ${product.quantity || 1} | Color: ${product.color || 'Brown'}</p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="order-item-row" style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-top: 1px solid var(--border-light);">
+                                <span>Subtotal:</span>
+                                <span>$${order.subtotal?.toFixed(2) || 0}</span>
+                            </div>
+                            <div class="order-item-row" style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                                <span>Shipping:</span>
+                                <span>${order.shipping_cost ? '$' + order.shipping_cost.toFixed(2) : (order.subtotal > 500 ? 'Free' : '$10.00')}</span>
+                            </div>
+                            <div class="order-item-row" style="display: flex; justify-content: space-between; padding: 0.5rem 0; font-weight: bold; color: var(--accent-gold);">
+                                <span>Total:</span>
+                                <span>$${order.total?.toFixed(2) || 0}</span>
+                            </div>
+                        </div>
+                        <div class="order-card-footer" style="padding: 1rem 1.5rem; background: rgba(255,255,255,0.02); display: flex; justify-content: space-between;">
+                            <div>Date: ${new Date(order.date).toLocaleDateString()}</div>
+                            <button class="btn btn-secondary btn-small" onclick="viewOrderDetails('${order.id}')">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                        </div>
+                    </div>
+                `}).join('');
+            } else {
+                ordersList.innerHTML = `
+                    <div class="text-center" style="padding: 3rem;">
+                        <i class="fas fa-shopping-bag" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                        <h3>No orders yet</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Start shopping to see your orders here</p>
+                        <a href="products.html" class="btn btn-primary">Shop Now</a>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // WISHLIST
+        // ============================================
+        function loadWishlist() {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            document.getElementById('wishlistCount').textContent = wishlist.length;
+            
+            const wishlistGrid = document.getElementById('wishlistItems');
+            
+            if (wishlist.length === 0) {
+                wishlistGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                        <i class="fas fa-heart" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                        <h3>Your wishlist is empty</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Save your favorite items for later</p>
+                        <a href="products.html" class="btn btn-primary">Shop Now</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            wishlistGrid.innerHTML = wishlist.map(item => `
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="${item.image}" alt="${item.name}" class="product-image">
+                        <div class="product-overlay">
+                            <button class="overlay-btn" onclick="removeFromWishlist(${item.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="overlay-btn" onclick="viewProduct(${item.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">${item.name}</h3>
+                        <div class="product-price-row">
+                            <span class="product-price">$${item.price}</span>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCartFromWishlist(${item.id})">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeFromWishlist(productId) {
+            let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            wishlist = wishlist.filter(item => item.id !== productId);
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            loadWishlist();
+            showNotification('Removed from wishlist', 'success');
+        }
+
+        function clearWishlist() {
+            if (confirm('Are you sure you want to clear your wishlist?')) {
+                localStorage.removeItem('wishlist');
+                loadWishlist();
+                showNotification('Wishlist cleared', 'success');
+            }
+        }
+
+        function addToCartFromWishlist(productId) {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            const product = wishlist.find(item => item.id === productId);
+            if (product) {
+                let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const existingItem = cart.find(item => item.id === product.id);
+                
+                if (existingItem) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1;
+                } else {
+                    cart.push({...product, quantity: 1});
+                }
+                
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                showNotification('Added to cart!', 'success');
+            }
+        }
+
+        function viewProduct(productId) {
+            window.location.href = `product-detail.html?id=${productId}`;
+        }
+
+        // ============================================
+        // ADDRESSES
+        // ============================================
+        function loadAddresses() {
+            const addresses = JSON.parse(localStorage.getItem('addresses') || '[]');
+            const container = document.getElementById('addressesList');
+            
+            if (addresses.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                        <i class="fas fa-map-marker-alt" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                        <h3>No addresses saved</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Add your first address for faster checkout</p>
+                        <button class="btn btn-primary" onclick="showAddAddress()">Add Address</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = addresses.map((address, index) => `
+                <div class="address-card" style="background: var(--gradient-card); border-radius: var(--radius-lg); padding: 1.5rem; border: 1px solid var(--border-light);">
+                    ${index === 0 ? '<span style="background: var(--accent-gold); color: var(--primary-dark); padding: 0.2rem 0.8rem; border-radius: var(--radius-full); font-size: 0.7rem; margin-bottom: 0.5rem; display: inline-block;">Default</span>' : ''}
+                    <h3 style="margin-bottom: 0.5rem;">${address.label}</h3>
+                    <p style="color: var(--text-secondary);">${address.street}</p>
+                    <p style="color: var(--text-secondary);">${address.city}, ${address.state} ${address.zip}</p>
+                    <p style="color: var(--text-secondary);">${address.country}</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-light);">
+                        <button class="btn-secondary btn-small" onclick="editAddress(${index})">Edit</button>
+                        <button class="btn-secondary btn-small" style="color: var(--danger);" onclick="deleteAddress(${index})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showAddAddress() {
+            document.getElementById('addressModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function saveAddress(event) {
+            event.preventDefault();
+            
+            const address = {
+                label: document.getElementById('addressLabel').value,
+                street: document.getElementById('addressStreet').value,
+                city: document.getElementById('addressCity').value,
+                state: document.getElementById('addressState').value,
+                zip: document.getElementById('addressZip').value,
+                country: document.getElementById('addressCountry').value
+            };
+            
+            const addresses = JSON.parse(localStorage.getItem('addresses') || '[]');
+            addresses.push(address);
+            localStorage.setItem('addresses', JSON.stringify(addresses));
+            
+            closeModal('addressModal');
+            document.getElementById('addressForm').reset();
+            loadAddresses();
+            showNotification('Address saved successfully!', 'success');
+        }
+
+        function deleteAddress(index) {
+            if (confirm('Delete this address?')) {
+                const addresses = JSON.parse(localStorage.getItem('addresses') || '[]');
+                addresses.splice(index, 1);
+                localStorage.setItem('addresses', JSON.stringify(addresses));
+                loadAddresses();
+                showNotification('Address deleted', 'success');
+            }
+        }
+
+        function editAddress(index) {
+            showNotification('Edit feature coming soon!', 'info');
+        }
+
+        // ============================================
+        // PAYMENT METHODS
+        // ============================================
+        function loadPaymentMethods() {
+            const payments = JSON.parse(localStorage.getItem('paymentMethods') || '[]');
+            const container = document.getElementById('paymentMethodsList');
+            
+            if (payments.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem;">
+                        <i class="fas fa-credit-card" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                        <h3>No payment methods saved</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Add a payment method for faster checkout</p>
+                        <button class="btn btn-primary" onclick="showAddPayment()">Add Payment Method</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = payments.map((payment, index) => `
+                <div class="payment-card" style="background: var(--gradient-card); border-radius: var(--radius-lg); padding: 1.5rem; display: flex; align-items: center; gap: 1rem; border: 1px solid var(--border-light); margin-bottom: 1rem;">
+                    <div class="payment-icon" style="width: 50px; height: 50px; background: rgba(197,165,114,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-${payment.type === 'paypal' ? 'paypal' : 'credit-card'}" style="color: var(--accent-gold);"></i>
+                    </div>
+                    <div class="payment-details" style="flex: 1;">
+                        <h3>${payment.type === 'paypal' ? 'PayPal' : payment.cardType || 'Credit Card'}</h3>
+                        <p style="color: var(--text-secondary);">${payment.type === 'paypal' ? payment.email : '•••• •••• •••• ' + payment.last4}</p>
+                    </div>
+                    ${index === 0 ? '<span class="payment-badge" style="background: var(--accent-gold); color: var(--primary-dark); padding: 0.2rem 1rem; border-radius: var(--radius-full); font-size: 0.7rem;">Default</span>' : ''}
+                    <button class="btn-secondary btn-small" onclick="deletePayment(${index})">
+                        <i class="fas fa-trash" style="color: var(--danger);"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function showAddPayment() {
+            showNotification('Add payment feature coming soon!', 'info');
+        }
+
+        function deletePayment(index) {
+            if (confirm('Remove this payment method?')) {
+                const payments = JSON.parse(localStorage.getItem('paymentMethods') || '[]');
+                payments.splice(index, 1);
+                localStorage.setItem('paymentMethods', JSON.stringify(payments));
+                loadPaymentMethods();
+                showNotification('Payment method removed', 'success');
+            }
+        }
+
+        // ============================================
+        // PROFILE FUNCTIONS
+        // ============================================
+        function updateProfile(event) {
+            event.preventDefault();
+            
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            // Update user data
+            user.full_name = document.getElementById('profileFullName').value;
+            user.phone = document.getElementById('profilePhone').value;
+            user.dob = document.getElementById('profileDob').value;
+            user.bio = document.getElementById('profileBio').value;
+            
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            // Update displayed name
+            document.getElementById('userFullName').textContent = user.full_name || user.username;
+            document.getElementById('greetingName').textContent = user.full_name || user.username;
+            
+            showNotification('Profile updated successfully!', 'success');
+        }
+
+        function cancelProfileEdit() {
+            loadUserData();
+            showNotification('Changes cancelled', 'info');
+        }
+
+        function changePassword(event) {
+            event.preventDefault();
+            
+            const currentPass = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            
+            if (!currentPass || !newPass || !confirmPass) {
+                showNotification('Please fill in all password fields', 'error');
+                return;
+            }
+            
+            if (newPass !== confirmPass) {
+                showNotification('New passwords do not match', 'error');
+                return;
+            }
+            
+            if (newPass.length < 6) {
+                showNotification('Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            showNotification('Password changed successfully!', 'success');
+            document.getElementById('passwordForm').reset();
+        }
+
+        // ============================================
+        // ACCOUNT FUNCTIONS
+        // ============================================
+        function deactivateAccount() {
+            if (confirm('Are you sure you want to deactivate your account? This action cannot be undone.')) {
+                showNotification('Account deactivation feature coming soon!', 'info');
+            }
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function isAuthenticated() {
+            return !!localStorage.getItem('token');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showNotification('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = count;
+            });
+        }
+
+        function formatPaymentMethod(method) {
+            const methods = {
+                'credit_card': 'Credit Card',
+                'debit_card': 'Debit Card',
+                'paypal': 'PayPal',
+                'cash_on_delivery': 'Cash on Delivery'
+            };
+            return methods[method] || method;
+        }
+
+        // Click outside modal to close
+        window.onclick = function(event) {
+            const modal = document.getElementById('orderDetailsModal');
+            if (event.target === modal) {
+                closeOrderModal();
+            }
+        };
+    </script>
+</body>
+</html>
