@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Methods - Luxury Bags</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">LUXURY BAGS</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Collection</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="payment-methods.html" class="active">Payment Methods</a>
+            <a href="#" onclick="logout()">Logout</a>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1>Payment Methods</h1>
+            <p>Manage your saved payment methods</p>
+        </div>
+    </div>
+
+    <!-- Payment Methods Content -->
+    <div class="payment-page">
+        <div class="container">
+            <!-- Loading Spinner -->
+            <div class="spinner" id="loadingSpinner" style="display: none;"></div>
+
+            <!-- Payment Methods Controls -->
+            <div class="payment-controls">
+                <button class="btn btn-primary" onclick="showAddPaymentModal()">
+                    <i class="fas fa-plus"></i> Add Payment Method
+                </button>
+            </div>
+
+            <!-- Payment Methods List -->
+            <div class="payment-list" id="paymentList">
+                <!-- Payment methods will be loaded here -->
+            </div>
+
+            <!-- Saved Cards Section -->
+            <div class="saved-cards-section" id="savedCardsSection" style="display: none;">
+                <h2>Saved Cards</h2>
+                <div class="cards-grid" id="cardsGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Payment Method Modal -->
+    <div id="paymentModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Payment Method</h2>
+                <button class="modal-close" onclick="closePaymentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Payment Method Tabs -->
+                <div class="payment-tabs">
+                    <button class="payment-tab active" onclick="switchPaymentTab('card')">Credit/Debit Card</button>
+                    <button class="payment-tab" onclick="switchPaymentTab('paypal')">PayPal</button>
+                </div>
+
+                <!-- Card Form -->
+                <form id="cardForm" style="display: block;" onsubmit="saveCard(event)">
+                    <div class="card-preview">
+                        <div class="card-preview-inner">
+                            <div class="card-chip">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="card-number-display">**** **** **** ****</div>
+                            <div class="card-details-display">
+                                <div class="card-holder-display">CARD HOLDER</div>
+                                <div class="card-expiry-display">MM/YY</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this); updateCardPreview()" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Cardholder Name</label>
+                        <input type="text" id="cardholderName" placeholder="Name on card" oninput="updateCardPreview()" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this); updateCardPreview()" required>
+                        </div>
+                        <div class="form-group">
+                            <label>CVV</label>
+                            <input type="text" id="cvv" placeholder="123" maxlength="3" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="setDefaultCard"> Set as default payment method
+                        </label>
+                    </div>
+                </form>
+
+                <!-- PayPal Form -->
+                <form id="paypalForm" style="display: none;" onsubmit="savePayPal(event)">
+                    <div class="paypal-info">
+                        <i class="fab fa-paypal"></i>
+                        <p>Connect your PayPal account for faster checkout.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>PayPal Email</label>
+                        <input type="email" id="paypalEmail" placeholder="your@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="setDefaultPaypal"> Set as default payment method
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePaymentModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="submitPaymentForm()">Save Payment Method</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Delete Payment Method</h2>
+                <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this payment method? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>LUXURY BAGS</h3>
+                <p>Redefining elegance since 2010. Each piece is crafted with passion and precision by master artisans.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="products.html">New Arrivals</a></li>
+                    <li><a href="products.html?filter=bestsellers">Best Sellers</a></li>
+                    <li><a href="products.html?filter=limited">Limited Edition</a></li>
+                    <li><a href="products.html?filter=gift">Gift Cards</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Newsletter</h3>
+                <p>Subscribe for exclusive offers</p>
+                <form style="display: flex; gap: 0.5rem; margin-top: 1rem;" onsubmit="event.preventDefault(); showNotification('Newsletter feature coming soon!', 'info');">
+                    <input type="email" placeholder="Your email" style="flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); border-radius: var(--radius-full); color: var(--text-primary);">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LUXURY BAGS. All rights reserved. Crafted with excellence in Italy.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Check authentication
+        if (!isAuthenticated()) {
+            window.location.href = 'login.html';
+        }
+
+        let currentPaymentType = 'card';
+        let currentDeleteIndex = null;
+        let currentDeleteType = null;
+
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('user') || 'null');
+        }
+
+        function getUserStorageKey(baseKey, user = null) {
+            const activeUser = user || getCurrentUser();
+            if (!activeUser) return baseKey;
+            const identifier = activeUser.id || activeUser.email || activeUser.username;
+            return identifier ? `${baseKey}_${identifier}` : baseKey;
+        }
+
+        function readUserList(baseKey) {
+            return JSON.parse(localStorage.getItem(getUserStorageKey(baseKey)) || '[]');
+        }
+
+        function writeUserList(baseKey, value) {
+            localStorage.setItem(getUserStorageKey(baseKey), JSON.stringify(value));
+        }
+
+        function migrateLegacyData() {
+            const user = getCurrentUser();
+            if (!user) return;
+            ['cart', 'wishlist', 'orders', 'addresses', 'paymentMethods'].forEach(baseKey => {
+                const scopedKey = getUserStorageKey(baseKey, user);
+                if (scopedKey === baseKey) return;
+                if (!localStorage.getItem(scopedKey) && localStorage.getItem(baseKey)) {
+                    localStorage.setItem(scopedKey, localStorage.getItem(baseKey));
+                    localStorage.removeItem(baseKey);
+                }
+            });
+        }
+
+        // ============================================
+        // LOAD PAYMENT METHODS
+        // ============================================
+        function loadPaymentMethods() {
+            const spinner = document.getElementById('loadingSpinner');
+            const paymentList = document.getElementById('paymentList');
+            const savedCardsSection = document.getElementById('savedCardsSection');
+            const cardsGrid = document.getElementById('cardsGrid');
+            
+            spinner.style.display = 'block';
+            
+            setTimeout(() => {
+                const payments = readUserList('paymentMethods');
+                
+                if (payments.length === 0) {
+                    paymentList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-credit-card"></i>
+                            <h2>No Payment Methods</h2>
+                            <p>Add a payment method for faster checkout.</p>
+                            <button class="btn btn-primary" onclick="showAddPaymentModal()">Add Payment Method</button>
+                        </div>
+                    `;
+                    savedCardsSection.style.display = 'none';
+                } else {
+                    // Show saved cards section
+                    savedCardsSection.style.display = 'block';
+                    
+                    // Display payment methods list
+                    paymentList.innerHTML = payments.map((payment, index) => `
+                        <div class="payment-method-card ${payment.isDefault ? 'default' : ''}">
+                            ${payment.isDefault ? '<span class="default-badge">DEFAULT</span>' : ''}
+                            <div class="payment-method-icon">
+                                <i class="fab fa-${payment.type === 'paypal' ? 'paypal' : 'cc-visa'}"></i>
+                            </div>
+                            <div class="payment-method-details">
+                                <h3>${payment.type === 'paypal' ? 'PayPal' : payment.cardType || 'Credit Card'}</h3>
+                                <p>${payment.type === 'paypal' ? payment.email : '•••• •••• •••• ' + payment.last4}</p>
+                                ${payment.expiry ? `<p class="expiry">Expires: ${payment.expiry}</p>` : ''}
+                            </div>
+                            <div class="payment-method-actions">
+                                ${!payment.isDefault ? '<button class="btn-link" onclick="setAsDefault(' + index + ')">Set as Default</button>' : ''}
+                                <button class="icon-btn" onclick="deletePaymentMethod('${payment.type}', ${index})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Display cards grid
+                    const cards = payments.filter(p => p.type === 'card');
+                    if (cards.length > 0) {
+                        cardsGrid.innerHTML = cards.map(card => `
+                            <div class="card-item">
+                                <div class="card-type">
+                                    <i class="fab fa-cc-${card.brand || 'visa'}"></i>
+                                </div>
+                                <div class="card-number">•••• •••• •••• ${card.last4}</div>
+                                <div class="card-name">${card.name}</div>
+                                <div class="card-expiry">Expires: ${card.expiry}</div>
+                                ${card.isDefault ? '<span class="card-default">Default</span>' : ''}
+                            </div>
+                        `).join('');
+                    } else {
+                        cardsGrid.innerHTML = '<p class="no-cards">No cards saved yet</p>';
+                    }
+                }
+                
+                spinner.style.display = 'none';
+            }, 500);
+        }
+
+        // ============================================
+        // PAYMENT MODAL FUNCTIONS
+        // ============================================
+        function showAddPaymentModal() {
+            document.getElementById('paymentModal').style.display = 'flex';
+            switchPaymentTab('card');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('cardForm').reset();
+            document.getElementById('paypalForm').reset();
+            resetCardPreview();
+        }
+
+        function switchPaymentTab(tab) {
+            currentPaymentType = tab;
+            
+            // Update tabs
+            document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide forms
+            document.getElementById('cardForm').style.display = tab === 'card' ? 'block' : 'none';
+            document.getElementById('paypalForm').style.display = tab === 'paypal' ? 'block' : 'none';
+            
+            if (tab === 'card') {
+                resetCardPreview();
+            }
+        }
+
+        function submitPaymentForm() {
+            if (currentPaymentType === 'card') {
+                document.getElementById('cardForm').dispatchEvent(new Event('submit'));
+            } else {
+                document.getElementById('paypalForm').dispatchEvent(new Event('submit'));
+            }
+        }
+
+        // ============================================
+        // CARD FUNCTIONS
+        // ============================================
+        function saveCard(event) {
+            event.preventDefault();
+            
+            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+            const last4 = cardNumber.slice(-4);
+            const cardholderName = document.getElementById('cardholderName').value;
+            const expiry = document.getElementById('expiryDate').value;
+            const setDefault = document.getElementById('setDefaultCard').checked;
+            
+            // Detect card brand (simplified)
+            let brand = 'visa';
+            if (cardNumber.startsWith('4')) brand = 'visa';
+            else if (cardNumber.startsWith('5')) brand = 'mastercard';
+            else if (cardNumber.startsWith('3')) brand = 'amex';
+            else if (cardNumber.startsWith('6')) brand = 'discover';
+            
+            const payments = readUserList('paymentMethods');
+            
+            // If this is set as default, remove default from others
+            if (setDefault) {
+                payments.forEach(p => p.isDefault = false);
+            }
+            
+            payments.push({
+                type: 'card',
+                brand: brand,
+                last4: last4,
+                name: cardholderName,
+                expiry: expiry,
+                isDefault: setDefault,
+                addedAt: new Date().toISOString()
+            });
+            
+            writeUserList('paymentMethods', payments);
+            closePaymentModal();
+            loadPaymentMethods();
+            showNotification('Card added successfully!', 'success');
+        }
+
+        function formatCardNumber(input) {
+            let value = input.value.replace(/\s/g, '').replace(/\D/g, '').substring(0, 16);
+            let formatted = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                formatted += value[i];
+            }
+            input.value = formatted;
+        }
+
+        function formatExpiry(input) {
+            let value = input.value.replace(/\D/g, '').substring(0, 4);
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2);
+            }
+            input.value = value;
+        }
+
+        function updateCardPreview() {
+            const cardNumber = document.getElementById('cardNumber').value || '**** **** **** ****';
+            const cardholderName = document.getElementById('cardholderName').value || 'CARD HOLDER';
+            const expiry = document.getElementById('expiryDate').value || 'MM/YY';
+            
+            document.querySelector('.card-number-display').textContent = cardNumber || '**** **** **** ****';
+            document.querySelector('.card-holder-display').textContent = cardholderName.toUpperCase() || 'CARD HOLDER';
+            document.querySelector('.card-expiry-display').textContent = expiry || 'MM/YY';
+        }
+
+        function resetCardPreview() {
+            document.querySelector('.card-number-display').textContent = '**** **** **** ****';
+            document.querySelector('.card-holder-display').textContent = 'CARD HOLDER';
+            document.querySelector('.card-expiry-display').textContent = 'MM/YY';
+        }
+
+        // ============================================
+        // PAYPAL FUNCTIONS
+        // ============================================
+        function savePayPal(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('paypalEmail').value;
+            const setDefault = document.getElementById('setDefaultPaypal').checked;
+            
+            const payments = readUserList('paymentMethods');
+            
+            // If this is set as default, remove default from others
+            if (setDefault) {
+                payments.forEach(p => p.isDefault = false);
+            }
+            
+            payments.push({
+                type: 'paypal',
+                email: email,
+                isDefault: setDefault,
+                addedAt: new Date().toISOString()
+            });
+            
+            writeUserList('paymentMethods', payments);
+            closePaymentModal();
+            loadPaymentMethods();
+            showNotification('PayPal account added successfully!', 'success');
+        }
+
+        // ============================================
+        // PAYMENT METHOD FUNCTIONS
+        // ============================================
+        function setAsDefault(index) {
+            const payments = readUserList('paymentMethods');
+            
+            payments.forEach(p => p.isDefault = false);
+            payments[index].isDefault = true;
+            
+            writeUserList('paymentMethods', payments);
+            loadPaymentMethods();
+            showNotification('Default payment method updated', 'success');
+        }
+
+        function deletePaymentMethod(type, index) {
+            currentDeleteType = type;
+            currentDeleteIndex = index;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            currentDeleteIndex = null;
+            currentDeleteType = null;
+        }
+
+        function confirmDelete() {
+            if (currentDeleteIndex !== null) {
+                const payments = readUserList('paymentMethods');
+                payments.splice(currentDeleteIndex, 1);
+                writeUserList('paymentMethods', payments);
+                loadPaymentMethods();
+                showNotification('Payment method deleted', 'success');
+            }
+            closeDeleteModal();
+        }
+
+        // ============================================
+        // NOTIFICATION SYSTEM
+        // ============================================
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function isAuthenticated() {
+            return !!localStorage.getItem('token') && !!localStorage.getItem('user');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showNotification('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        function updateCartCount() {
+            const cart = readUserList('cart');
+            const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = count;
+            });
+        }
+
+        // Add styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .page-header {
+                background: var(--gradient-card);
+                border-bottom: 1px solid var(--border-light);
+                padding: 2rem 5%;
+                margin-bottom: 2rem;
+            }
+            
+            .payment-page {
+                padding: 0 5% 4rem;
+                min-height: 60vh;
+            }
+            
+            .payment-controls {
+                margin-bottom: 2rem;
+            }
+            
+            .empty-state {
+                text-align: center;
+                padding: 4rem;
+                background: var(--gradient-card);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+            }
+            
+            .empty-state i {
+                font-size: 4rem;
+                color: var(--text-muted);
+                margin-bottom: 1rem;
+            }
+            
+            .payment-method-card {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+                background: var(--gradient-card);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+                position: relative;
+            }
+            
+            .payment-method-card.default {
+                border-color: var(--accent-gold);
+                box-shadow: var(--shadow-gold);
+            }
+            
+            .default-badge {
+                position: absolute;
+                top: -0.5rem;
+                right: 1rem;
+                background: var(--accent-gold);
+                color: var(--primary-black);
+                padding: 0.2rem 1rem;
+                border-radius: var(--radius-full);
+                font-size: 0.7rem;
+                font-weight: bold;
+            }
+            
+            .payment-method-icon {
+                width: 50px;
+                height: 50px;
+                background: var(--bg-card);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+                color: var(--accent-gold);
+            }
+            
+            .payment-method-details {
+                flex: 1;
+            }
+            
+            .payment-method-details h3 {
+                margin-bottom: 0.3rem;
+            }
+            
+            .payment-method-details p {
+                color: var(--text-secondary);
+            }
+            
+            .expiry {
+                font-size: 0.9rem;
+                margin-top: 0.3rem;
+            }
+            
+            .payment-method-actions {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .saved-cards-section {
+                margin-top: 3rem;
+            }
+            
+            .saved-cards-section h2 {
+                margin-bottom: 1.5rem;
+            }
+            
+            .cards-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .card-item {
+                background: var(--gradient-card);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+                padding: 1.5rem;
+                position: relative;
+            }
+            
+            .card-type {
+                font-size: 2rem;
+                color: var(--accent-gold);
+                margin-bottom: 1rem;
+            }
+            
+            .card-number {
+                font-family: monospace;
+                font-size: 1.1rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .card-name {
+                color: var(--text-secondary);
+                margin-bottom: 0.3rem;
+            }
+            
+            .card-expiry {
+                color: var(--text-muted);
+                font-size: 0.9rem;
+            }
+            
+            .card-default {
+                position: absolute;
+                top: 0.5rem;
+                right: 0.5rem;
+                background: var(--accent-gold);
+                color: var(--primary-black);
+                padding: 0.2rem 0.5rem;
+                border-radius: var(--radius-full);
+                font-size: 0.7rem;
+            }
+            
+            .payment-tabs {
+                display: flex;
+                gap: 1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .payment-tab {
+                flex: 1;
+                padding: 0.8rem;
+                background: none;
+                border: 2px solid var(--border-light);
+                border-radius: var(--radius-full);
+                color: var(--text-secondary);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .payment-tab.active {
+                background: var(--accent-gold);
+                border-color: var(--accent-gold);
+                color: var(--primary-black);
+            }
+            
+            .card-preview {
+                background: linear-gradient(135deg, #1a1a2a, #16213e);
+                border-radius: var(--radius-lg);
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+                color: white;
+                font-family: monospace;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            }
+            
+            .card-preview-inner {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .card-chip {
+                font-size: 2rem;
+                color: var(--accent-gold);
+            }
+            
+            .card-number-display {
+                font-size: 1.2rem;
+                letter-spacing: 2px;
+            }
+            
+            .card-details-display {
+                display: flex;
+                justify-content: space-between;
+            }
+            
+            .paypal-info {
+                text-align: center;
+                padding: 2rem;
+            }
+            
+            .paypal-info i {
+                font-size: 3rem;
+                color: #003087;
+                margin-bottom: 1rem;
+            }
+            
+            .btn-danger {
+                background: var(--danger);
+                color: white;
+                border: none;
+                padding: 0.8rem 2rem;
+                border-radius: var(--radius-full);
+                cursor: pointer;
+            }
+            
+            .btn-danger:hover {
+                background: #c0392b;
+            }
+            
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                background: var(--gradient-card);
+                border: 2px solid var(--accent-gold);
+                border-radius: var(--radius-lg);
+                max-width: 500px;
+                width: 90%;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .modal-header {
+                padding: 1.5rem;
+                border-bottom: 1px solid var(--border-light);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .modal-close {
+                background: none;
+                border: none;
+                color: var(--text-primary);
+                font-size: 2rem;
+                cursor: pointer;
+            }
+            
+            .modal-body {
+                padding: 1.5rem;
+            }
+            
+            .modal-footer {
+                padding: 1.5rem;
+                border-top: 1px solid var(--border-light);
+                display: flex;
+                justify-content: flex-end;
+                gap: 1rem;
+            }
+            
+            .form-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+            
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: var(--gradient-card);
+                border: 2px solid var(--accent-gold);
+                border-radius: var(--radius-lg);
+                color: var(--text-primary);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                animation: slideIn 0.3s ease;
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .payment-method-card {
+                    flex-direction: column;
+                    text-align: center;
+                }
+                
+                .payment-method-actions {
+                    width: 100%;
+                    justify-content: center;
+                }
+                
+                .form-row {
+                    grid-template-columns: 1fr;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            migrateLegacyData();
+            loadPaymentMethods();
+            updateCartCount();
+            
+            if (isAuthenticated()) {
+                document.querySelectorAll('.login-link').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.logout-link').forEach(el => el.style.display = 'inline-block');
+            }
+        });
+
+        // Click outside to close modals
+        window.onclick = function(event) {
+            const paymentModal = document.getElementById('paymentModal');
+            const deleteModal = document.getElementById('deleteModal');
+            
+            if (event.target === paymentModal) {
+                closePaymentModal();
+            }
+            if (event.target === deleteModal) {
+                closeDeleteModal();
+            }
+        };
+    </script>
+</body>
+</html>

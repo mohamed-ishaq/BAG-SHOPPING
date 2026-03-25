@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Addresses - Luxury Bags</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">LUXURY BAGS</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Collection</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="addresses.html" class="active">Addresses</a>
+            <a href="#" onclick="logout()">Logout</a>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1>Saved Addresses</h1>
+            <p>Manage your shipping and billing addresses</p>
+        </div>
+    </div>
+
+    <!-- Addresses Content -->
+    <div class="addresses-page">
+        <div class="container">
+            <!-- Loading Spinner -->
+            <div class="spinner" id="loadingSpinner" style="display: none;"></div>
+
+            <!-- Addresses Controls -->
+            <div class="addresses-controls">
+                <button class="btn btn-primary" onclick="showAddAddressModal()">
+                    <i class="fas fa-plus"></i> Add New Address
+                </button>
+            </div>
+
+            <!-- Addresses Grid -->
+            <div class="addresses-grid" id="addressesGrid">
+                <!-- Addresses will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Address Modal -->
+    <div id="addressModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Address</h2>
+                <button class="modal-close" onclick="closeAddressModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addressForm" onsubmit="saveAddress(event)">
+                    <input type="hidden" id="addressId" value="">
+                    
+                    <div class="form-group">
+                        <label>Address Label</label>
+                        <select id="addressLabel" required>
+                            <option value="">Select label</option>
+                            <option value="Home">Home</option>
+                            <option value="Office">Office</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="addressFullName" placeholder="Enter full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Street Address</label>
+                        <input type="text" id="addressStreet" placeholder="Street address" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Apartment, Suite, etc. (optional)</label>
+                        <input type="text" id="addressApt" placeholder="Apartment, suite, unit">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" id="addressCity" required>
+                        </div>
+                        <div class="form-group">
+                            <label>State/Province</label>
+                            <input type="text" id="addressState" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ZIP/Postal Code</label>
+                            <input type="text" id="addressZip" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Country</label>
+                            <select id="addressCountry" required>
+                                <option value="">Select country</option>
+                                <option value="United States">United States</option>
+                                <option value="Canada">Canada</option>
+                                <option value="United Kingdom">United Kingdom</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Italy">Italy</option>
+                                <option value="France">France</option>
+                                <option value="Germany">Germany</option>
+                                <option value="Japan">Japan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="addressPhone" placeholder="Enter phone number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="addressDefault"> Set as default address
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="addressBilling"> Use as billing address
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAddressModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="document.getElementById('addressForm').submit()">Save Address</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Delete Address</h2>
+                <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this address? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>LUXURY BAGS</h3>
+                <p>Redefining elegance since 2010. Each piece is crafted with passion and precision by master artisans.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="products.html">New Arrivals</a></li>
+                    <li><a href="products.html?filter=bestsellers">Best Sellers</a></li>
+                    <li><a href="products.html?filter=limited">Limited Edition</a></li>
+                    <li><a href="products.html?filter=gift">Gift Cards</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Newsletter</h3>
+                <p>Subscribe for exclusive offers</p>
+                <form style="display: flex; gap: 0.5rem; margin-top: 1rem;" onsubmit="event.preventDefault(); showNotification('Newsletter feature coming soon!', 'info');">
+                    <input type="email" placeholder="Your email" style="flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); border-radius: var(--radius-full); color: var(--text-primary);">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LUXURY BAGS. All rights reserved. Crafted with excellence in Italy.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Check authentication
+        if (!isAuthenticated()) {
+            window.location.href = 'login.html';
+        }
+
+        let currentDeleteIndex = null;
+
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('user') || 'null');
+        }
+
+        function getUserStorageKey(baseKey, user = null) {
+            const activeUser = user || getCurrentUser();
+            if (!activeUser) return baseKey;
+            const identifier = activeUser.id || activeUser.email || activeUser.username;
+            return identifier ? `${baseKey}_${identifier}` : baseKey;
+        }
+
+        function readUserList(baseKey) {
+            return JSON.parse(localStorage.getItem(getUserStorageKey(baseKey)) || '[]');
+        }
+
+        function writeUserList(baseKey, value) {
+            localStorage.setItem(getUserStorageKey(baseKey), JSON.stringify(value));
+        }
+
+        function migrateLegacyData() {
+            const user = getCurrentUser();
+            if (!user) return;
+            ['cart', 'wishlist', 'orders', 'addresses', 'paymentMethods'].forEach(baseKey => {
+                const scopedKey = getUserStorageKey(baseKey, user);
+                if (scopedKey === baseKey) return;
+                if (!localStorage.getItem(scopedKey) && localStorage.getItem(baseKey)) {
+                    localStorage.setItem(scopedKey, localStorage.getItem(baseKey));
+                    localStorage.removeItem(baseKey);
+                }
+            });
+        }
+
+        // ============================================
+        // LOAD ADDRESSES
+        // ============================================
+        function loadAddresses() {
+            const spinner = document.getElementById('loadingSpinner');
+            const grid = document.getElementById('addressesGrid');
+            
+            spinner.style.display = 'block';
+            
+            setTimeout(() => {
+                const addresses = readUserList('addresses');
+                
+                if (addresses.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <h2>No Addresses Saved</h2>
+                            <p>Add your first address for faster checkout.</p>
+                            <button class="btn btn-primary" onclick="showAddAddressModal()">Add Address</button>
+                        </div>
+                    `;
+                } else {
+                    grid.innerHTML = addresses.map((address, index) => `
+                        <div class="address-card ${address.isDefault ? 'default' : ''}">
+                            ${address.isDefault ? '<span class="default-badge">DEFAULT</span>' : ''}
+                            <div class="address-card-header">
+                                <span class="address-label">${address.label || 'Address'}</span>
+                                <div class="address-actions">
+                                    <button class="icon-btn" onclick="editAddress(${index})" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="icon-btn" onclick="showDeleteModal(${index})" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="address-card-body">
+                                <p class="address-name">${address.fullName || ''}</p>
+                                <p>${address.street || ''}</p>
+                                ${address.apt ? `<p>${address.apt}</p>` : ''}
+                                <p>${address.city || ''}, ${address.state || ''} ${address.zip || ''}</p>
+                                <p>${address.country || ''}</p>
+                                <p class="address-phone">${address.phone || ''}</p>
+                            </div>
+                            <div class="address-card-footer">
+                                ${address.isBilling ? '<span class="billing-badge">Billing Address</span>' : ''}
+                                ${!address.isDefault ? '<button class="btn-link" onclick="setAsDefault(' + index + ')">Set as Default</button>' : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                spinner.style.display = 'none';
+            }, 500);
+        }
+
+        // ============================================
+        // ADDRESS MODAL FUNCTIONS
+        // ============================================
+        function showAddAddressModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Address';
+            document.getElementById('addressForm').reset();
+            document.getElementById('addressId').value = '';
+            document.getElementById('addressModal').style.display = 'flex';
+        }
+
+        function editAddress(index) {
+            const addresses = readUserList('addresses');
+            const address = addresses[index];
+            
+            document.getElementById('modalTitle').textContent = 'Edit Address';
+            document.getElementById('addressId').value = index;
+            document.getElementById('addressLabel').value = address.label || '';
+            document.getElementById('addressFullName').value = address.fullName || '';
+            document.getElementById('addressStreet').value = address.street || '';
+            document.getElementById('addressApt').value = address.apt || '';
+            document.getElementById('addressCity').value = address.city || '';
+            document.getElementById('addressState').value = address.state || '';
+            document.getElementById('addressZip').value = address.zip || '';
+            document.getElementById('addressCountry').value = address.country || '';
+            document.getElementById('addressPhone').value = address.phone || '';
+            document.getElementById('addressDefault').checked = address.isDefault || false;
+            document.getElementById('addressBilling').checked = address.isBilling || false;
+            
+            document.getElementById('addressModal').style.display = 'flex';
+        }
+
+        function closeAddressModal() {
+            document.getElementById('addressModal').style.display = 'none';
+        }
+
+        function saveAddress(event) {
+            event.preventDefault();
+            
+            const addressId = document.getElementById('addressId').value;
+            const addresses = readUserList('addresses');
+            
+            const address = {
+                label: document.getElementById('addressLabel').value,
+                fullName: document.getElementById('addressFullName').value,
+                street: document.getElementById('addressStreet').value,
+                apt: document.getElementById('addressApt').value,
+                city: document.getElementById('addressCity').value,
+                state: document.getElementById('addressState').value,
+                zip: document.getElementById('addressZip').value,
+                country: document.getElementById('addressCountry').value,
+                phone: document.getElementById('addressPhone').value,
+                isDefault: document.getElementById('addressDefault').checked,
+                isBilling: document.getElementById('addressBilling').checked
+            };
+            
+            // If this is set as default, remove default from others
+            if (address.isDefault) {
+                addresses.forEach(addr => addr.isDefault = false);
+            }
+            
+            if (addressId === '') {
+                // Add new address
+                addresses.push(address);
+                showNotification('Address added successfully!', 'success');
+            } else {
+                // Update existing address
+                addresses[addressId] = address;
+                showNotification('Address updated successfully!', 'success');
+            }
+            
+            writeUserList('addresses', addresses);
+            closeAddressModal();
+            loadAddresses();
+        }
+
+        // ============================================
+        // DELETE FUNCTIONS
+        // ============================================
+        function showDeleteModal(index) {
+            currentDeleteIndex = index;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            currentDeleteIndex = null;
+        }
+
+        function confirmDelete() {
+            if (currentDeleteIndex !== null) {
+                const addresses = readUserList('addresses');
+                addresses.splice(currentDeleteIndex, 1);
+                writeUserList('addresses', addresses);
+                loadAddresses();
+                showNotification('Address deleted successfully', 'success');
+            }
+            closeDeleteModal();
+        }
+
+        // ============================================
+        // ADDRESS FUNCTIONS
+        // ============================================
+        function setAsDefault(index) {
+            const addresses = readUserList('addresses');
+            
+            // Remove default from all
+            addresses.forEach(addr => addr.isDefault = false);
+            
+            // Set selected as default
+            addresses[index].isDefault = true;
+            
+            writeUserList('addresses', addresses);
+            loadAddresses();
+            showNotification('Default address updated', 'success');
+        }
+
+        // ============================================
+        // NOTIFICATION SYSTEM
+        // ============================================
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function isAuthenticated() {
+            return !!localStorage.getItem('token') && !!localStorage.getItem('user');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showNotification('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        function updateCartCount() {
+            const cart = readUserList('cart');
+            const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = count;
+            });
+        }
+
+        // Add styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .page-header {
+                background: var(--gradient-card);
+                border-bottom: 1px solid var(--border-light);
+                padding: 2rem 5%;
+                margin-bottom: 2rem;
+            }
+            
+            .addresses-page {
+                padding: 0 5% 4rem;
+                min-height: 60vh;
+            }
+            
+            .addresses-controls {
+                margin-bottom: 2rem;
+            }
+            
+            .addresses-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .empty-state {
+                grid-column: 1/-1;
+                text-align: center;
+                padding: 4rem;
+                background: var(--gradient-card);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+            }
+            
+            .empty-state i {
+                font-size: 4rem;
+                color: var(--text-muted);
+                margin-bottom: 1rem;
+            }
+            
+            .address-card {
+                background: var(--gradient-card);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+                padding: 1.5rem;
+                position: relative;
+                transition: all 0.3s ease;
+            }
+            
+            .address-card.default {
+                border-color: var(--accent-gold);
+                box-shadow: var(--shadow-gold);
+            }
+            
+            .default-badge {
+                position: absolute;
+                top: -0.5rem;
+                right: 1rem;
+                background: var(--accent-gold);
+                color: var(--primary-black);
+                padding: 0.2rem 1rem;
+                border-radius: var(--radius-full);
+                font-size: 0.7rem;
+                font-weight: bold;
+            }
+            
+            .address-card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid var(--border-light);
+            }
+            
+            .address-label {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: var(--accent-gold);
+            }
+            
+            .address-actions {
+                display: flex;
+                gap: 0.5rem;
+            }
+            
+            .icon-btn {
+                background: none;
+                border: none;
+                color: var(--text-secondary);
+                font-size: 1rem;
+                cursor: pointer;
+                padding: 0.3rem;
+                transition: color 0.3s ease;
+            }
+            
+            .icon-btn:hover {
+                color: var(--accent-gold);
+            }
+            
+            .address-card-body {
+                margin-bottom: 1rem;
+            }
+            
+            .address-name {
+                font-weight: 600;
+                margin-bottom: 0.3rem;
+            }
+            
+            .address-phone {
+                margin-top: 0.5rem;
+                color: var(--accent-gold);
+            }
+            
+            .address-card-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-top: 1rem;
+                border-top: 1px solid var(--border-light);
+            }
+            
+            .billing-badge {
+                background: var(--bg-card);
+                color: var(--text-secondary);
+                padding: 0.2rem 0.8rem;
+                border-radius: var(--radius-full);
+                font-size: 0.7rem;
+            }
+            
+            .btn-link {
+                background: none;
+                border: none;
+                color: var(--accent-gold);
+                cursor: pointer;
+                text-decoration: underline;
+                font-size: 0.9rem;
+            }
+            
+            .btn-link:hover {
+                color: var(--accent-gold-light);
+            }
+            
+            .btn-danger {
+                background: var(--danger);
+                color: white;
+                border: none;
+                padding: 0.8rem 2rem;
+                border-radius: var(--radius-full);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-danger:hover {
+                background: #c0392b;
+                transform: translateY(-2px);
+            }
+            
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                background: var(--gradient-card);
+                border: 2px solid var(--accent-gold);
+                border-radius: var(--radius-lg);
+                max-width: 500px;
+                width: 90%;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .modal-header {
+                padding: 1.5rem;
+                border-bottom: 1px solid var(--border-light);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                position: sticky;
+                top: 0;
+                background: var(--gradient-card);
+            }
+            
+            .modal-close {
+                background: none;
+                border: none;
+                color: var(--text-primary);
+                font-size: 2rem;
+                cursor: pointer;
+            }
+            
+            .modal-close:hover {
+                color: var(--accent-gold);
+            }
+            
+            .modal-body {
+                padding: 1.5rem;
+            }
+            
+            .modal-footer {
+                padding: 1.5rem;
+                border-top: 1px solid var(--border-light);
+                display: flex;
+                justify-content: flex-end;
+                gap: 1rem;
+            }
+            
+            .form-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+            
+            label {
+                display: block;
+                margin-bottom: 0.5rem;
+                color: var(--text-secondary);
+            }
+            
+            input, select, textarea {
+                width: 100%;
+                padding: 0.8rem 1rem;
+                background: var(--bg-input);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-md);
+                color: var(--text-primary);
+            }
+            
+            input:focus, select:focus {
+                outline: none;
+                border-color: var(--accent-gold);
+            }
+            
+            .checkbox-label {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                cursor: pointer;
+            }
+            
+            .checkbox-label input[type="checkbox"] {
+                width: auto;
+            }
+            
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: var(--gradient-card);
+                border: 2px solid var(--accent-gold);
+                border-radius: var(--radius-lg);
+                color: var(--text-primary);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                animation: slideIn 0.3s ease;
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .addresses-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .form-row {
+                    grid-template-columns: 1fr;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            migrateLegacyData();
+            loadAddresses();
+            updateCartCount();
+            
+            if (isAuthenticated()) {
+                document.querySelectorAll('.login-link').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.logout-link').forEach(el => el.style.display = 'inline-block');
+            }
+        });
+
+        // Click outside to close modals
+        window.onclick = function(event) {
+            const addressModal = document.getElementById('addressModal');
+            const deleteModal = document.getElementById('deleteModal');
+            
+            if (event.target === addressModal) {
+                closeAddressModal();
+            }
+            if (event.target === deleteModal) {
+                closeDeleteModal();
+            }
+        };
+    </script>
+</body>
+</html>

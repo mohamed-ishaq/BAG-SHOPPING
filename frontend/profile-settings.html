@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings - Luxury Bags</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">LUXURY BAGS</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Collection</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="profile-settings.html" class="active">Profile</a>
+            <a href="#" onclick="logout()">Logout</a>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1>Profile Settings</h1>
+            <p>Manage your personal information</p>
+        </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="profile-page">
+        <div class="container">
+            <div class="profile-grid">
+                <!-- Avatar Section -->
+                <div class="profile-sidebar">
+                    <div class="avatar-section">
+                        <div class="avatar-container">
+                            <img src="" alt="Profile" id="profileAvatar">
+                            <div class="avatar-overlay" onclick="document.getElementById('avatarUpload').click()">
+                                <i class="fas fa-camera"></i>
+                                <span>Change Photo</span>
+                            </div>
+                        </div>
+                        <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadAvatar(this)">
+                        <h3 id="userDisplayName">Loading...</h3>
+                        <p class="user-email" id="userEmailDisplay">loading@email.com</p>
+                    </div>
+
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="memberSince">2024</span>
+                            <span class="stat-label">Member Since</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="orderCount">0</span>
+                            <span class="stat-label">Orders</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="wishlistCount">0</span>
+                            <span class="stat-label">Wishlist</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Form -->
+                <div class="profile-main">
+                    <div class="profile-form-card">
+                        <h2>Personal Information</h2>
+                        <form id="profileForm" onsubmit="updateProfile(event)">
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" id="profileUsername" readonly disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="profileEmail" readonly disabled>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="profileFullName" placeholder="Enter your full name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" id="profilePhone" placeholder="Enter your phone number">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Date of Birth</label>
+                                <input type="date" id="profileDob">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Bio</label>
+                                <textarea id="profileBio" rows="4" placeholder="Tell us a little about yourself..."></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-secondary" onclick="cancelProfileEdit()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Change Password Section -->
+                    <div class="password-form-card">
+                        <h2>Change Password</h2>
+                        <form id="passwordForm" onsubmit="changePassword(event)">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currentPassword" placeholder="Enter current password">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>New Password</label>
+                                    <input type="password" id="newPassword" placeholder="Enter new password">
+                                </div>
+                                <div class="form-group">
+                                    <label>Confirm New Password</label>
+                                    <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                                </div>
+                            </div>
+
+                            <div class="password-requirements">
+                                <p>Password must contain:</p>
+                                <ul>
+                                    <li id="req-length">At least 8 characters</li>
+                                    <li id="req-uppercase">At least 1 uppercase letter</li>
+                                    <li id="req-number">At least 1 number</li>
+                                    <li id="req-special">At least 1 special character</li>
+                                </ul>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Update Password</button>
+                        </form>
+                    </div>
+
+                    <!-- Account Actions -->
+                    <div class="account-actions">
+                        <h3>Account Actions</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="downloadData()">
+                                <i class="fas fa-download"></i> Download Your Data
+                            </button>
+                            <button class="btn btn-secondary" style="color: var(--danger); border-color: var(--danger);" onclick="deactivateAccount()">
+                                <i class="fas fa-exclamation-triangle"></i> Deactivate Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>LUXURY BAGS</h3>
+                <p>Redefining elegance since 2010. Each piece is crafted with passion and precision by master artisans.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="products.html">New Arrivals</a></li>
+                    <li><a href="products.html?filter=bestsellers">Best Sellers</a></li>
+                    <li><a href="products.html?filter=limited">Limited Edition</a></li>
+                    <li><a href="products.html?filter=gift">Gift Cards</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Newsletter</h3>
+                <p>Subscribe for exclusive offers</p>
+                <form style="display: flex; gap: 0.5rem; margin-top: 1rem;" onsubmit="event.preventDefault(); showNotification('Newsletter feature coming soon!', 'info');">
+                    <input type="email" placeholder="Your email" style="flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); border-radius: var(--radius-full); color: var(--text-primary);">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LUXURY BAGS. All rights reserved. Crafted with excellence in Italy.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Check authentication
+        if (!isAuthenticated()) {
+            window.location.href = 'login.html';
+        }
+
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('user') || 'null');
+        }
+
+        function getUserStorageKey(baseKey, user = null) {
+            const activeUser = user || getCurrentUser();
+            if (!activeUser) return baseKey;
+            const identifier = activeUser.id || activeUser.email || activeUser.username;
+            return identifier ? `${baseKey}_${identifier}` : baseKey;
+        }
+
+        function readUserList(baseKey) {
+            return JSON.parse(localStorage.getItem(getUserStorageKey(baseKey)) || '[]');
+        }
+
+        function writeUserList(baseKey, value) {
+            localStorage.setItem(getUserStorageKey(baseKey), JSON.stringify(value));
+        }
+
+        function migrateLegacyData() {
+            const user = getCurrentUser();
+            if (!user) return;
+            ['cart', 'wishlist', 'orders', 'addresses', 'paymentMethods', 'profileAvatar'].forEach(baseKey => {
+                const scopedKey = getUserStorageKey(baseKey, user);
+                if (scopedKey === baseKey) return;
+                if (!localStorage.getItem(scopedKey) && localStorage.getItem(baseKey)) {
+                    localStorage.setItem(scopedKey, localStorage.getItem(baseKey));
+                    localStorage.removeItem(baseKey);
+                }
+            });
+        }
+
+        // ============================================
+        // LOAD USER DATA
+        // ============================================
+        function loadUserData() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const fullName = user.full_name || user.username || 'Valued Customer';
+            const email = user.email || 'customer@luxurybags.com';
+            
+            document.getElementById('userDisplayName').textContent = fullName;
+            document.getElementById('userEmailDisplay').textContent = email;
+            
+            document.getElementById('profileUsername').value = user.username || '';
+            document.getElementById('profileEmail').value = email;
+            document.getElementById('profileFullName').value = user.full_name || '';
+            document.getElementById('profilePhone').value = user.phone || '';
+            document.getElementById('profileDob').value = user.dob || '';
+            document.getElementById('profileBio').value = user.bio || '';
+            
+            // Set member since
+            const joinDate = user.createdAt ? new Date(user.createdAt) : new Date();
+            document.getElementById('memberSince').textContent = joinDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+            
+            // Load stats
+            const orders = readUserList('orders');
+            const wishlist = readUserList('wishlist');
+            document.getElementById('orderCount').textContent = orders.length;
+            document.getElementById('wishlistCount').textContent = wishlist.length;
+        }
+
+        // ============================================
+        // AVATAR UPLOAD
+        // ============================================
+        function uploadAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    document.getElementById('profileAvatar').src = e.target.result;
+                    localStorage.setItem(getUserStorageKey('profileAvatar'), e.target.result);
+                    showNotification('Profile picture updated!', 'success');
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function loadProfileAvatar() {
+            const savedAvatar = localStorage.getItem(getUserStorageKey('profileAvatar'));
+            if (savedAvatar) {
+                document.getElementById('profileAvatar').src = savedAvatar;
+            } else {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                const name = user.full_name || user.username || 'User';
+                document.getElementById('profileAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=D4AF37&color=000&size=200`;
+            }
+        }
+
+        // ============================================
+        // PROFILE FUNCTIONS
+        // ============================================
+        function updateProfile(event) {
+            event.preventDefault();
+            
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            user.full_name = document.getElementById('profileFullName').value;
+            user.phone = document.getElementById('profilePhone').value;
+            user.dob = document.getElementById('profileDob').value;
+            user.bio = document.getElementById('profileBio').value;
+            
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            document.getElementById('userDisplayName').textContent = user.full_name || user.username;
+            
+            showNotification('Profile updated successfully!', 'success');
+        }
+
+        function cancelProfileEdit() {
+            loadUserData();
+            showNotification('Changes cancelled', 'info');
+        }
+
+        // ============================================
+        // PASSWORD FUNCTIONS
+        // ============================================
+        function checkPasswordStrength(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+            
+            document.getElementById('req-length').style.color = requirements.length ? 'var(--success)' : 'var(--text-muted)';
+            document.getElementById('req-uppercase').style.color = requirements.uppercase ? 'var(--success)' : 'var(--text-muted)';
+            document.getElementById('req-number').style.color = requirements.number ? 'var(--success)' : 'var(--text-muted)';
+            document.getElementById('req-special').style.color = requirements.special ? 'var(--success)' : 'var(--text-muted)';
+            
+            return Object.values(requirements).every(Boolean);
+        }
+
+        document.getElementById('newPassword')?.addEventListener('input', function(e) {
+            checkPasswordStrength(e.target.value);
+        });
+
+        function changePassword(event) {
+            event.preventDefault();
+            
+            const currentPass = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            
+            if (!currentPass || !newPass || !confirmPass) {
+                showNotification('Please fill in all password fields', 'error');
+                return;
+            }
+            
+            if (newPass !== confirmPass) {
+                showNotification('New passwords do not match', 'error');
+                return;
+            }
+            
+            if (!checkPasswordStrength(newPass)) {
+                showNotification('Password does not meet requirements', 'error');
+                return;
+            }
+            
+            showNotification('Password changed successfully!', 'success');
+            document.getElementById('passwordForm').reset();
+            
+            // Reset requirement colors
+            ['req-length', 'req-uppercase', 'req-number', 'req-special'].forEach(id => {
+                document.getElementById(id).style.color = 'var(--text-muted)';
+            });
+        }
+
+        // ============================================
+        // ACCOUNT FUNCTIONS
+        // ============================================
+        function downloadData() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const orders = readUserList('orders');
+            const wishlist = readUserList('wishlist');
+            const addresses = readUserList('addresses');
+            
+            const data = {
+                user,
+                orders,
+                wishlist,
+                addresses,
+                exportedAt: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `luxurybags-data-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            showNotification('Your data has been downloaded', 'success');
+        }
+
+        function deactivateAccount() {
+            if (confirm('Are you sure you want to deactivate your account? This action cannot be undone.')) {
+                showNotification('Account deactivation feature coming soon!', 'info');
+            }
+        }
+
+        // ============================================
+        // NOTIFICATION SYSTEM
+        // ============================================
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function isAuthenticated() {
+            return !!localStorage.getItem('token') && !!localStorage.getItem('user');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showNotification('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        function updateCartCount() {
+            const cart = readUserList('cart');
+            const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = count;
+            });
+        }
+
+        // Add styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .page-header {
+                background: var(--gradient-card);
+                border-bottom: 1px solid var(--border-light);
+                padding: 2rem 5%;
+                margin-bottom: 2rem;
+            }
+            
+            .profile-page {
+                padding: 0 5% 4rem;
+                min-height: 60vh;
+            }
+            
+            .profile-grid {
+                display: grid;
+                grid-template-columns: 300px 1fr;
+                gap: 2rem;
+            }
+            
+            .profile-sidebar {
+                background: var(--gradient-card);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+                padding: 2rem;
+                height: fit-content;
+            }
+            
+            .avatar-section {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+            
+            .avatar-container {
+                position: relative;
+                width: 150px;
+                height: 150px;
+                margin: 0 auto 1rem;
+                cursor: pointer;
+            }
+            
+            .avatar-container img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                border: 3px solid var(--accent-gold);
+                object-fit: cover;
+            }
+            
+            .avatar-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .avatar-container:hover .avatar-overlay {
+                opacity: 1;
+            }
+            
+            .avatar-overlay i {
+                font-size: 2rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .avatar-overlay span {
+                font-size: 0.8rem;
+            }
+            
+            .user-email {
+                color: var(--text-muted);
+            }
+            
+            .profile-stats {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+                text-align: center;
+                padding-top: 1.5rem;
+                border-top: 1px solid var(--border-light);
+            }
+            
+            .stat-value {
+                display: block;
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: var(--accent-gold);
+            }
+            
+            .stat-label {
+                color: var(--text-muted);
+                font-size: 0.8rem;
+            }
+            
+            .profile-main {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .profile-form-card,
+            .password-form-card,
+            .account-actions {
+                background: var(--gradient-card);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+                padding: 2rem;
+            }
+            
+            .profile-form-card h2,
+            .password-form-card h2,
+            .account-actions h3 {
+                margin-bottom: 1.5rem;
+            }
+            
+            .form-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+            
+            .form-actions {
+                display: flex;
+                gap: 1rem;
+                margin-top: 1rem;
+            }
+            
+            .password-requirements {
+                background: var(--bg-card);
+                padding: 1rem;
+                border-radius: var(--radius-lg);
+                margin: 1rem 0;
+            }
+            
+            .password-requirements ul {
+                list-style: none;
+                margin-top: 0.5rem;
+            }
+            
+            .password-requirements li {
+                color: var(--text-muted);
+                margin-bottom: 0.3rem;
+                padding-left: 1.5rem;
+                position: relative;
+            }
+            
+            .password-requirements li::before {
+                content: '•';
+                position: absolute;
+                left: 0.5rem;
+                color: currentColor;
+            }
+            
+            .action-buttons {
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: var(--gradient-card);
+                border: 2px solid var(--accent-gold);
+                border-radius: var(--radius-lg);
+                color: var(--text-primary);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                animation: slideIn 0.3s ease;
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .profile-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .form-row {
+                    grid-template-columns: 1fr;
+                }
+                
+                .action-buttons {
+                    flex-direction: column;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            migrateLegacyData();
+            loadUserData();
+            loadProfileAvatar();
+            updateCartCount();
+            
+            if (isAuthenticated()) {
+                document.querySelectorAll('.login-link').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.logout-link').forEach(el => el.style.display = 'inline-block');
+            }
+        });
+    </script>
+</body>
+</html>

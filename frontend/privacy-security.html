@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy & Security - Luxury Bags</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">LUXURY BAGS</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Collection</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="privacy-security.html" class="active">Privacy & Security</a>
+            <a href="#" onclick="logout()">Logout</a>
+            <a href="cart.html" class="cart-icon">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1>Privacy & Security</h1>
+            <p>Manage your account security and privacy settings</p>
+        </div>
+    </div>
+
+    <!-- Privacy & Security Content -->
+    <div class="security-page">
+        <div class="container">
+            <div class="security-grid">
+                <!-- Left Sidebar -->
+                <div class="security-sidebar">
+                    <div class="security-nav">
+                        <a href="#account-security" class="security-nav-item active" onclick="showSecuritySection('account-security')">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Account Security</span>
+                        </a>
+                        <a href="#login-sessions" class="security-nav-item" onclick="showSecuritySection('login-sessions')">
+                            <i class="fas fa-history"></i>
+                            <span>Login Sessions</span>
+                        </a>
+                        <a href="#two-factor" class="security-nav-item" onclick="showSecuritySection('two-factor')">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Two-Factor Authentication</span>
+                        </a>
+                        <a href="#privacy" class="security-nav-item" onclick="showSecuritySection('privacy')">
+                            <i class="fas fa-user-secret"></i>
+                            <span>Privacy Settings</span>
+                        </a>
+                        <a href="#data" class="security-nav-item" onclick="showSecuritySection('data')">
+                            <i class="fas fa-database"></i>
+                            <span>Data & Privacy</span>
+                        </a>
+                        <a href="#notifications" class="security-nav-item" onclick="showSecuritySection('notifications')">
+                            <i class="fas fa-bell"></i>
+                            <span>Security Notifications</span>
+                        </a>
+                    </div>
+
+                    <div class="security-score">
+                        <h3>Security Score</h3>
+                        <div class="score-circle">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path class="circle-bg"
+                                    d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="var(--border-light)"
+                                    stroke-width="2"
+                                />
+                                <path class="circle"
+                                    id="securityScoreCircle"
+                                    d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="var(--accent-gold)"
+                                    stroke-width="2"
+                                    stroke-dasharray="75, 100"
+                                />
+                                <text x="18" y="20.35" class="percentage" id="securityScoreText">75%</text>
+                            </svg>
+                        </div>
+                        <p>Your security score is <strong>Good</strong></p>
+                        <div class="score-details">
+                            <div class="score-item">
+                                <span>Password Strength</span>
+                                <span class="score-value strong">Strong</span>
+                            </div>
+                            <div class="score-item">
+                                <span>2FA Status</span>
+                                <span class="score-value warning">Not Enabled</span>
+                            </div>
+                            <div class="score-item">
+                                <span>Active Sessions</span>
+                                <span class="score-value">3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Content -->
+                <div class="security-content">
+                    <!-- Account Security Section -->
+                    <div id="account-security" class="security-section active">
+                        <h2>Account Security</h2>
+                        
+                        <div class="security-card">
+                            <h3>Password</h3>
+                            <p>Last changed: 30 days ago</p>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill strong" style="width: 75%;"></div>
+                                </div>
+                                <span class="strength-label">Strong Password</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="showChangePasswordModal()">Change Password</button>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Security Questions</h3>
+                            <p>Add security questions to help recover your account</p>
+                            <div class="questions-list">
+                                <div class="question-item">
+                                    <span>What was your first pet's name?</span>
+                                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                                </div>
+                                <div class="question-item">
+                                    <span>What city were you born in?</span>
+                                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                                </div>
+                                <div class="question-item">
+                                    <span>What is your mother's maiden name?</span>
+                                    <i class="fas fa-plus-circle" style="color: var(--accent-gold);"></i>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary" onclick="manageSecurityQuestions()">Manage Questions</button>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Recovery Email</h3>
+                            <p>Add a recovery email to reset your password if you get locked out</p>
+                            <div class="recovery-email">
+                                <input type="email" placeholder="recovery@example.com" id="recoveryEmail">
+                                <button class="btn btn-secondary" onclick="saveRecoveryEmail()">Save</button>
+                            </div>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Recovery Phone</h3>
+                            <p>Add a recovery phone number for SMS verification</p>
+                            <div class="recovery-phone">
+                                <input type="tel" placeholder="+1 234 567 8900" id="recoveryPhone">
+                                <button class="btn btn-secondary" onclick="saveRecoveryPhone()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Login Sessions Section -->
+                    <div id="login-sessions" class="security-section">
+                        <h2>Login Sessions</h2>
+                        
+                        <div class="security-card">
+                            <h3>Current Session</h3>
+                            <div class="session-item current">
+                                <div class="session-info">
+                                    <i class="fas fa-laptop"></i>
+                                    <div>
+                                        <strong>Windows PC - Chrome</strong>
+                                        <p>IP: 192.168.1.100 • Started 2 hours ago</p>
+                                    </div>
+                                </div>
+                                <span class="session-badge">Current</span>
+                            </div>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Active Sessions</h3>
+                            <div class="session-item">
+                                <div class="session-info">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <div>
+                                        <strong>iPhone 14 - Safari</strong>
+                                        <p>IP: 192.168.1.101 • Last active: 2 days ago</p>
+                                    </div>
+                                </div>
+                                <button class="btn-link" onclick="terminateSession('iPhone')">Terminate</button>
+                            </div>
+                            
+                            <div class="session-item">
+                                <div class="session-info">
+                                    <i class="fas fa-tablet-alt"></i>
+                                    <div>
+                                        <strong>iPad - Safari</strong>
+                                        <p>IP: 192.168.1.102 • Last active: 5 days ago</p>
+                                    </div>
+                                </div>
+                                <button class="btn-link" onclick="terminateSession('iPad')">Terminate</button>
+                            </div>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Recent Login History</h3>
+                            <div class="login-history">
+                                <div class="history-item">
+                                    <div>
+                                        <strong>March 15, 2024</strong>
+                                        <p>Windows PC • Chrome • IP: 192.168.1.100</p>
+                                    </div>
+                                    <span class="history-status success">Successful</span>
+                                </div>
+                                <div class="history-item">
+                                    <div>
+                                        <strong>March 14, 2024</strong>
+                                        <p>iPhone • Safari • IP: 192.168.1.101</p>
+                                    </div>
+                                    <span class="history-status success">Successful</span>
+                                </div>
+                                <div class="history-item">
+                                    <div>
+                                        <strong>March 13, 2024</strong>
+                                        <p>Unknown Device • Location: New York</p>
+                                    </div>
+                                    <span class="history-status warning">New Device</span>
+                                </div>
+                            </div>
+                            <button class="btn-link" onclick="viewAllHistory()">View Full History</button>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Terminate All Other Sessions</h3>
+                            <p>This will log you out of all devices except this one</p>
+                            <button class="btn btn-secondary" onclick="terminateAllSessions()">
+                                <i class="fas fa-sign-out-alt"></i> Terminate All
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Two-Factor Authentication Section -->
+                    <div id="two-factor" class="security-section">
+                        <h2>Two-Factor Authentication (2FA)</h2>
+                        
+                        <div class="security-card">
+                            <h3>Status: <span class="status-warning">Not Enabled</span></h3>
+                            <p>Add an extra layer of security to your account by requiring both your password and a verification code from your phone.</p>
+                            
+                            <div class="feature-list">
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Protect against unauthorized access</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Get alerts for new sign-ins</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Use authenticator app or SMS</span>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary" onclick="enable2FA()">Enable Two-Factor Authentication</button>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Authentication Methods</h3>
+                            
+                            <div class="method-item">
+                                <div>
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <div>
+                                        <strong>Authenticator App</strong>
+                                        <p>Google Authenticator, Microsoft Authenticator, etc.</p>
+                                    </div>
+                                </div>
+                                <button class="btn-link">Setup</button>
+                            </div>
+
+                            <div class="method-item">
+                                <div>
+                                    <i class="fas fa-sms"></i>
+                                    <div>
+                                        <strong>SMS Verification</strong>
+                                        <p>Receive codes via text message</p>
+                                    </div>
+                                </div>
+                                <button class="btn-link">Setup</button>
+                            </div>
+
+                            <div class="method-item">
+                                <div>
+                                    <i class="fas fa-key"></i>
+                                    <div>
+                                        <strong>Security Key</strong>
+                                        <p>Use physical security key (YubiKey, etc.)</p>
+                                    </div>
+                                </div>
+                                <button class="btn-link">Setup</button>
+                            </div>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Recovery Codes</h3>
+                            <p>Generate backup codes to access your account if you lose your phone</p>
+                            <button class="btn btn-secondary" onclick="generateRecoveryCodes()">Generate Recovery Codes</button>
+                        </div>
+                    </div>
+
+                    <!-- Privacy Settings Section -->
+                    <div id="privacy" class="security-section">
+                        <h2>Privacy Settings</h2>
+                        
+                        <div class="security-card">
+                            <h3>Profile Visibility</h3>
+                            
+                            <div class="privacy-option">
+                                <div>
+                                    <strong>Public Profile</strong>
+                                    <p>Allow others to see your profile information</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="publicProfile" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <div class="privacy-option">
+                                <div>
+                                    <strong>Show Order History</strong>
+                                    <p>Display your reviews and ratings publicly</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="showOrderHistory" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <div class="privacy-option">
+                                <div>
+                                    <strong>Activity Status</strong>
+                                    <p>Show when you're active on the site</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="showActivity">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Personalization</h3>
+                            
+                            <div class="privacy-option">
+                                <div>
+                                    <strong>Personalized Recommendations</strong>
+                                    <p>Get product recommendations based on your activity</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="personalizedRecs" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <div class="privacy-option">
+                                <div>
+                                    <strong>Marketing Emails</strong>
+                                    <p>Receive promotional offers and newsletters</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="marketingEmails">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <div class="privacy-option">
+                                <div>
+                                    <strong>Share Data for Research</strong>
+                                    <p>Help us improve our services anonymously</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="shareData" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Cookie Preferences</h3>
+                            <button class="btn btn-secondary" onclick="manageCookies()">Manage Cookie Settings</button>
+                        </div>
+                    </div>
+
+                    <!-- Data & Privacy Section -->
+                    <div id="data" class="security-section">
+                        <h2>Data & Privacy</h2>
+                        
+                        <div class="security-card">
+                            <h3>Download Your Data</h3>
+                            <p>Get a copy of all your personal data stored on our platform</p>
+                            <button class="btn btn-primary" onclick="requestDataDownload()">
+                                <i class="fas fa-download"></i> Request Data Download
+                            </button>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Data Retention</h3>
+                            <p>Choose how long we keep your data</p>
+                            <select id="dataRetention" class="form-select">
+                                <option value="forever">Keep forever</option>
+                                <option value="5years" selected>5 years</option>
+                                <option value="3years">3 years</option>
+                                <option value="1year">1 year</option>
+                            </select>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Third-Party Access</h3>
+                            <p>Apps and services with access to your account</p>
+                            
+                            <div class="app-item">
+                                <div>
+                                    <img src="https://via.placeholder.com/40" alt="App icon">
+                                    <div>
+                                        <strong>Fashion Analytics</strong>
+                                        <p>Access: Email, Order History</p>
+                                    </div>
+                                </div>
+                                <button class="btn-link" onclick="revokeAccess('fashion-analytics')">Revoke</button>
+                            </div>
+
+                            <div class="app-item">
+                                <div>
+                                    <img src="https://via.placeholder.com/40" alt="App icon">
+                                    <div>
+                                        <strong>Style Tracker</strong>
+                                        <p>Access: Wishlist, Reviews</p>
+                                    </div>
+                                </div>
+                                <button class="btn-link" onclick="revokeAccess('style-tracker')">Revoke</button>
+                            </div>
+
+                            <button class="btn-link" onclick="manageApps()">Manage Connected Apps</button>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Delete Account</h3>
+                            <p>Permanently delete your account and all associated data</p>
+                            <button class="btn btn-danger" onclick="requestAccountDeletion()">
+                                <i class="fas fa-exclamation-triangle"></i> Delete Account
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Security Notifications Section -->
+                    <div id="notifications" class="security-section">
+                        <h2>Security Notifications</h2>
+                        
+                        <div class="security-card">
+                            <h3>Alert Preferences</h3>
+                            
+                            <div class="notification-option">
+                                <div>
+                                    <strong>New Sign-in Alerts</strong>
+                                    <p>Get notified when someone signs in from a new device</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="newSigninAlert" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <div class="notification-option">
+                                <div>
+                                    <strong>Password Changes</strong>
+                                    <p>Alert when your password is changed</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="passwordChangeAlert" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <div class="notification-option">
+                                <div>
+                                    <strong>Failed Login Attempts</strong>
+                                    <p>Notify after multiple failed login attempts</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="failedLoginAlert" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <div class="notification-option">
+                                <div>
+                                    <strong>Account Recovery</strong>
+                                    <p>Alert when account recovery is requested</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="recoveryAlert" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Notification Methods</h3>
+                            
+                            <div class="method-option">
+                                <div>
+                                    <strong>Email Notifications</strong>
+                                    <p>security@${userEmail}</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="emailNotifications" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <div class="method-option">
+                                <div>
+                                    <strong>SMS Notifications</strong>
+                                    <p>+1 234 567 8900</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="smsNotifications" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+
+                            <div class="method-option">
+                                <div>
+                                    <strong>Push Notifications</strong>
+                                    <p>Browser and mobile app alerts</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="pushNotifications" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="security-card">
+                            <h3>Recent Alerts</h3>
+                            <div class="alerts-list">
+                                <div class="alert-item unread">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <div>
+                                        <strong>New device signed in</strong>
+                                        <p>iPhone 14 • New York, NY • 2 hours ago</p>
+                                    </div>
+                                    <span class="alert-badge">New</span>
+                                </div>
+                                <div class="alert-item">
+                                    <i class="fas fa-key"></i>
+                                    <div>
+                                        <strong>Password changed</strong>
+                                        <p>Your password was updated • 30 days ago</p>
+                                    </div>
+                                </div>
+                                <div class="alert-item">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <div>
+                                        <strong>Failed login attempt</strong>
+                                        <p>3 failed attempts from IP: 45.123.45.67</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-link" onclick="viewAllAlerts()">View All Alerts</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Change Password</h2>
+                <button class="modal-close" onclick="closeChangePasswordModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="changePasswordForm" onsubmit="updatePassword(event)">
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" id="currentPassword" placeholder="Enter current password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPassword" placeholder="Enter new password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+                    </div>
+
+                    <div class="password-requirements">
+                        <p>Password must contain:</p>
+                        <ul>
+                            <li id="req-length">At least 8 characters</li>
+                            <li id="req-uppercase">At least 1 uppercase letter</li>
+                            <li id="req-number">At least 1 number</li>
+                            <li id="req-special">At least 1 special character</li>
+                        </ul>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Update Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recovery Codes Modal -->
+    <div id="recoveryCodesModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Recovery Codes</h2>
+                <button class="modal-close" onclick="closeRecoveryCodesModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Save these recovery codes in a safe place. You can use them to access your account if you lose your phone.</p>
+                
+                <div class="recovery-codes">
+                    <code>ABCD-EFGH-IJKL-MNOP</code>
+                    <code>QRST-UVWX-YZ12-3456</code>
+                    <code>7890-ABCD-EFGH-IJKL</code>
+                    <code>MNOP-QRST-UVWX-YZ12</code>
+                    <code>3456-7890-ABCD-EFGH</code>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="downloadRecoveryCodes()">Download</button>
+                    <button class="btn btn-secondary" onclick="printRecoveryCodes()">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>LUXURY BAGS</h3>
+                <p>Redefining elegance since 2010. Each piece is crafted with passion and precision by master artisans.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="products.html">New Arrivals</a></li>
+                    <li><a href="products.html?filter=bestsellers">Best Sellers</a></li>
+                    <li><a href="products.html?filter=limited">Limited Edition</a></li>
+                    <li><a href="products.html?filter=gift">Gift Cards</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Newsletter</h3>
+                <p>Subscribe for exclusive offers</p>
+                <form style="display: flex; gap: 0.5rem; margin-top: 1rem;" onsubmit="event.preventDefault(); showNotification('Newsletter feature coming soon!', 'info');">
+                    <input type="email" placeholder="Your email" style="flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); border-radius: var(--radius-full); color: var(--text-primary);">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LUXURY BAGS. All rights reserved. Crafted with excellence in Italy.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Check authentication
+        if (!isAuthenticated()) {
+            window.location.href = 'login.html';
+        }
+
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('user') || 'null');
+        }
+
+        function getUserStorageKey(baseKey, user = null) {
+            const activeUser = user || getCurrentUser();
+            if (!activeUser) return baseKey;
+            const identifier = activeUser.id || activeUser.email || activeUser.username;
+            return identifier ? `${baseKey}_${identifier}` : baseKey;
+        }
+
+        function readUserList(baseKey) {
+            return JSON.parse(localStorage.getItem(getUserStorageKey(baseKey)) || '[]');
+        }
+
+        function migrateLegacyData() {
+            const user = getCurrentUser();
+            if (!user) return;
+            ['cart', 'wishlist', 'orders', 'addresses', 'paymentMethods'].forEach(baseKey => {
+                const scopedKey = getUserStorageKey(baseKey, user);
+                if (scopedKey === baseKey) return;
+                if (!localStorage.getItem(scopedKey) && localStorage.getItem(baseKey)) {
+                    localStorage.setItem(scopedKey, localStorage.getItem(baseKey));
+                    localStorage.removeItem(baseKey);
+                }
+            });
+        }
+
+        // ============================================
+        // SECTION NAVIGATION
+        // ============================================
+        function showSecuritySection(sectionId) {
+            // Update nav items
+            document.querySelectorAll('.security-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.security-nav-item').classList.add('active');
+            
+            // Update sections
+            document.querySelectorAll('.security-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // ============================================
+        // PASSWORD FUNCTIONS
+        // ============================================
+        function showChangePasswordModal() {
+            document.getElementById('changePasswordModal').style.display = 'flex';
+        }
+
+        function closeChangePasswordModal() {
+            document.getElementById('changePasswordModal').style.display = 'none';
+            document.getElementById('changePasswordForm').reset();
+        }
+
+        function checkPasswordStrength(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+            
+            document.getElementById('req-length').style.color = requirements.length ? 'var(--success)' : 'var(--text-muted)';
+            document.getElementById('req-uppercase').style.color = requirements.uppercase ? 'var(--success)' : 'var(--text-muted)';
+            document.getElementById('req-number').style.color = requirements.number ? 'var(--success)' : 'var(--text-muted)';
+            document.getElementById('req-special').style.color = requirements.special ? 'var(--success)' : 'var(--text-muted)';
+            
+            return Object.values(requirements).every(Boolean);
+        }
+
+        document.getElementById('newPassword')?.addEventListener('input', function(e) {
+            checkPasswordStrength(e.target.value);
+        });
+
+        function updatePassword(event) {
+            event.preventDefault();
+            
+            const currentPass = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            
+            if (!currentPass || !newPass || !confirmPass) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (newPass !== confirmPass) {
+                showNotification('New passwords do not match', 'error');
+                return;
+            }
+            
+            if (!checkPasswordStrength(newPass)) {
+                showNotification('Password does not meet requirements', 'error');
+                return;
+            }
+            
+            showNotification('Password updated successfully!', 'success');
+            closeChangePasswordModal();
+        }
+
+        // ============================================
+        // 2FA FUNCTIONS
+        // ============================================
+        function enable2FA() {
+            showNotification('2FA setup feature coming soon!', 'info');
+        }
+
+        function generateRecoveryCodes() {
+            document.getElementById('recoveryCodesModal').style.display = 'flex';
+        }
+
+        function closeRecoveryCodesModal() {
+            document.getElementById('recoveryCodesModal').style.display = 'none';
+        }
+
+        function downloadRecoveryCodes() {
+            const codes = document.querySelectorAll('.recovery-codes code');
+            const text = Array.from(codes).map(code => code.textContent).join('\n');
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'luxurybags-recovery-codes.txt';
+            a.click();
+            showNotification('Recovery codes downloaded', 'success');
+        }
+
+        function printRecoveryCodes() {
+            window.print();
+        }
+
+        // ============================================
+        // SESSION FUNCTIONS
+        // ============================================
+        function terminateSession(device) {
+            if (confirm(`Terminate session on ${device}?`)) {
+                showNotification(`Session on ${device} terminated`, 'success');
+            }
+        }
+
+        function terminateAllSessions() {
+            if (confirm('This will log you out of all other devices. Continue?')) {
+                showNotification('All other sessions terminated', 'success');
+            }
+        }
+
+        function viewAllHistory() {
+            showNotification('View full history feature coming soon!', 'info');
+        }
+
+        // ============================================
+        // SECURITY FUNCTIONS
+        // ============================================
+        function manageSecurityQuestions() {
+            showNotification('Security questions feature coming soon!', 'info');
+        }
+
+        function saveRecoveryEmail() {
+            const email = document.getElementById('recoveryEmail').value;
+            if (email) {
+                showNotification('Recovery email saved', 'success');
+            }
+        }
+
+        function saveRecoveryPhone() {
+            const phone = document.getElementById('recoveryPhone').value;
+            if (phone) {
+                showNotification('Recovery phone saved', 'success');
+            }
+        }
+
+        // ============================================
+        // PRIVACY FUNCTIONS
+        // ============================================
+        function manageCookies() {
+            showNotification('Cookie preferences coming soon!', 'info');
+        }
+
+        // ============================================
+        // DATA FUNCTIONS
+        // ============================================
+        function requestDataDownload() {
+            showNotification('Preparing your data for download...', 'info');
+            setTimeout(() => {
+                showNotification('Your data is ready! Download started.', 'success');
+            }, 2000);
+        }
+
+        function revokeAccess(app) {
+            if (confirm(`Revoke access for ${app}?`)) {
+                showNotification(`Access revoked for ${app}`, 'success');
+            }
+        }
+
+        function manageApps() {
+            showNotification('Connected apps management coming soon!', 'info');
+        }
+
+        function requestAccountDeletion() {
+            if (confirm('Are you absolutely sure? This action cannot be undone and all your data will be permanently deleted.')) {
+                showNotification('Account deletion request submitted. You will receive a confirmation email.', 'info');
+            }
+        }
+
+        // ============================================
+        // NOTIFICATION FUNCTIONS
+        // ============================================
+        function viewAllAlerts() {
+            showNotification('View all alerts feature coming soon!', 'info');
+        }
+
+        // ============================================
+        // NOTIFICATION SYSTEM
+        // ============================================
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function isAuthenticated() {
+            return !!localStorage.getItem('token') && !!localStorage.getItem('user');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showNotification('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        function updateCartCount() {
+            const cart = readUserList('cart');
+            const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = count;
+            });
+        }
+
+        // Add styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .page-header {
+                background: var(--gradient-card);
+                border-bottom: 1px solid var(--border-light);
+                padding: 2rem 5%;
+                margin-bottom: 2rem;
+            }
+            
+            .security-page {
+                padding: 0 5% 4rem;
+                min-height: 60vh;
+            }
+            
+            .security-grid {
+                display: grid;
+                grid-template-columns: 280px 1fr;
+                gap: 2rem;
+            }
+            
+            .security-sidebar {
+                position: sticky;
+                top: 100px;
+                height: fit-content;
+            }
+            
+            .security-nav {
+                background: var(--gradient-card);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .security-nav-item {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 1rem;
+                color: var(--text-secondary);
+                text-decoration: none;
+                border-radius: var(--radius-md);
+                transition: all 0.3s ease;
+            }
+            
+            .security-nav-item i {
+                width: 20px;
+                color: var(--accent-gold);
+            }
+            
+            .security-nav-item:hover,
+            .security-nav-item.active {
+                background: var(--bg-card);
+                color: var(--accent-gold);
+            }
+            
+            .security-score {
+                background: var(--gradient-card);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+                padding: 1.5rem;
+                text-align: center;
+            }
+            
+            .score-circle {
+                width: 120px;
+                margin: 1rem auto;
+            }
+            
+            .circular-chart {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .circle-bg {
+                stroke: var(--border-light);
+            }
+            
+            .circle {
+                stroke: var(--accent-gold);
+                fill: none;
+                stroke-linecap: round;
+                transition: stroke-dasharray 0.3s ease;
+            }
+            
+            .percentage {
+                fill: var(--text-primary);
+                font-size: 0.4rem;
+                text-anchor: middle;
+                font-weight: bold;
+            }
+            
+            .score-details {
+                margin-top: 1rem;
+                text-align: left;
+            }
+            
+            .score-item {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid var(--border-light);
+            }
+            
+            .score-value.strong {
+                color: var(--success);
+            }
+            
+            .score-value.warning {
+                color: var(--warning);
+            }
+            
+            .security-content {
+                background: var(--gradient-card);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+                padding: 2rem;
+            }
+            
+            .security-section {
+                display: none;
+            }
+            
+            .security-section.active {
+                display: block;
+            }
+            
+            .security-card {
+                background: var(--bg-card);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .security-card h3 {
+                margin-bottom: 1rem;
+            }
+            
+            .password-strength {
+                margin: 1rem 0;
+            }
+            
+            .strength-bar {
+                height: 8px;
+                background: var(--border-light);
+                border-radius: var(--radius-full);
+                overflow: hidden;
+                margin-bottom: 0.5rem;
+            }
+            
+            .strength-fill {
+                height: 100%;
+                transition: width 0.3s ease;
+            }
+            
+            .strength-fill.strong {
+                background: var(--success);
+            }
+            
+            .questions-list {
+                margin: 1rem 0;
+            }
+            
+            .question-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid var(--border-light);
+            }
+            
+            .recovery-email,
+            .recovery-phone {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 0.5rem;
+            }
+            
+            .session-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+                background: var(--gradient-card);
+                border-radius: var(--radius-lg);
+                margin-bottom: 0.5rem;
+            }
+            
+            .session-item.current {
+                border: 1px solid var(--accent-gold);
+            }
+            
+            .session-info {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .session-info i {
+                font-size: 1.5rem;
+                color: var(--accent-gold);
+            }
+            
+            .session-badge {
+                background: var(--accent-gold);
+                color: var(--primary-black);
+                padding: 0.2rem 0.8rem;
+                border-radius: var(--radius-full);
+                font-size: 0.7rem;
+                font-weight: bold;
+            }
+            
+            .login-history {
+                margin: 1rem 0;
+            }
+            
+            .history-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid var(--border-light);
+            }
+            
+            .history-status.success {
+                color: var(--success);
+            }
+            
+            .history-status.warning {
+                color: var(--warning);
+            }
+            
+            .feature-list {
+                margin: 1rem 0;
+            }
+            
+            .feature-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.3rem 0;
+            }
+            
+            .feature-item i {
+                color: var(--success);
+            }
+            
+            .method-item,
+            .app-item,
+            .privacy-option,
+            .notification-option,
+            .method-option {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+                background: var(--gradient-card);
+                border-radius: var(--radius-lg);
+                margin-bottom: 0.5rem;
+            }
+            
+            .method-item > div:first-child,
+            .app-item > div:first-child {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .method-item i {
+                font-size: 1.5rem;
+                color: var(--accent-gold);
+            }
+            
+            .app-item img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+            }
+            
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 50px;
+                height: 24px;
+            }
+            
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+            
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: var(--border-light);
+                transition: .3s;
+                border-radius: 24px;
+            }
+            
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 18px;
+                width: 18px;
+                left: 3px;
+                bottom: 3px;
+                background-color: white;
+                transition: .3s;
+                border-radius: 50%;
+            }
+            
+            input:checked + .slider {
+                background-color: var(--accent-gold);
+            }
+            
+            input:checked + .slider:before {
+                transform: translateX(26px);
+            }
+            
+            .alerts-list {
+                margin: 1rem 0;
+            }
+            
+            .alert-item {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 1rem;
+                background: var(--gradient-card);
+                border-radius: var(--radius-lg);
+                margin-bottom: 0.5rem;
+            }
+            
+            .alert-item.unread {
+                border-left: 3px solid var(--accent-gold);
+            }
+            
+            .alert-item i {
+                font-size: 1.2rem;
+                color: var(--accent-gold);
+            }
+            
+            .alert-badge {
+                background: var(--accent-gold);
+                color: var(--primary-black);
+                padding: 0.2rem 0.5rem;
+                border-radius: var(--radius-full);
+                font-size: 0.7rem;
+                font-weight: bold;
+            }
+            
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                background: var(--gradient-card);
+                border: 2px solid var(--accent-gold);
+                border-radius: var(--radius-lg);
+                max-width: 500px;
+                width: 90%;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .modal-header {
+                padding: 1.5rem;
+                border-bottom: 1px solid var(--border-light);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .modal-close {
+                background: none;
+                border: none;
+                color: var(--text-primary);
+                font-size: 2rem;
+                cursor: pointer;
+            }
+            
+            .modal-body {
+                padding: 1.5rem;
+            }
+            
+            .modal-footer {
+                padding: 1.5rem;
+                border-top: 1px solid var(--border-light);
+                display: flex;
+                justify-content: flex-end;
+                gap: 1rem;
+            }
+            
+            .recovery-codes {
+                background: var(--bg-card);
+                padding: 1.5rem;
+                border-radius: var(--radius-lg);
+                font-family: monospace;
+                margin: 1rem 0;
+            }
+            
+            .recovery-codes code {
+                display: block;
+                padding: 0.5rem;
+                font-size: 1.1rem;
+                letter-spacing: 2px;
+            }
+            
+            .btn-danger {
+                background: var(--danger);
+                color: white;
+                border: none;
+                padding: 0.8rem 2rem;
+                border-radius: var(--radius-full);
+                cursor: pointer;
+            }
+            
+            .btn-danger:hover {
+                background: #c0392b;
+            }
+            
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: var(--gradient-card);
+                border: 2px solid var(--accent-gold);
+                border-radius: var(--radius-lg);
+                color: var(--text-primary);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                animation: slideIn 0.3s ease;
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .security-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .security-sidebar {
+                    position: static;
+                }
+                
+                .method-item,
+                .app-item {
+                    flex-direction: column;
+                    text-align: center;
+                }
+                
+                .method-item > div:first-child,
+                .app-item > div:first-child {
+                    flex-direction: column;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            migrateLegacyData();
+            updateCartCount();
+            
+            if (isAuthenticated()) {
+                document.querySelectorAll('.login-link').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.logout-link').forEach(el => el.style.display = 'inline-block');
+            }
+            
+            // Set user email in notification methods
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const emailSpan = document.querySelector('.method-option p');
+            if (emailSpan && user.email) {
+                emailSpan.textContent = `security@${user.email}`;
+            }
+        });
+
+        // Click outside to close modals
+        window.onclick = function(event) {
+            const passwordModal = document.getElementById('changePasswordModal');
+            const codesModal = document.getElementById('recoveryCodesModal');
+            
+            if (event.target === passwordModal) {
+                closeChangePasswordModal();
+            }
+            if (event.target === codesModal) {
+                closeRecoveryCodesModal();
+            }
+        };
+    </script>
+</body>
+</html>

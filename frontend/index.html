@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -54,15 +54,46 @@
         </div>
     </section>
 
-    <!-- Featured Products -->
+    <!-- Bag Showcase -->
     <div class="container">
         <div class="section-header text-center" style="margin: 4rem 0 2rem;">
-            <h2>Featured Collection</h2>
-            <p class="text-secondary">Discover our most exclusive luxury bags</p>
+            <h2>Bag Showcase</h2>
+            <p class="text-secondary">A visual preview of our signature styles</p>
         </div>
-        
-        <div class="products-grid" id="featuredProducts">
-            <!-- Products loaded via JavaScript -->
+
+        <div class="products-grid" id="bagShowcase">
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="https://images.unsplash.com/photo-1584917865448-de89fe76cc2b?auto=format&fit=crop&w=900&q=80" alt="Premium leather tote bag" class="product-image" loading="lazy" onerror="handleProductImageError(this)">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">Italian Leather Tote</h3>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=900&q=80" alt="Vintage satchel bag" class="product-image" loading="lazy" onerror="handleProductImageError(this)">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">Vintage Satchel</h3>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=80" alt="Designer shoulder bag" class="product-image" loading="lazy" onerror="handleProductImageError(this)">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">Designer Shoulder</h3>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=900&q=80" alt="Evening clutch bag" class="product-image" loading="lazy" onerror="handleProductImageError(this)">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">Evening Clutch</h3>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -88,7 +119,7 @@
                         <i class="fas fa-truck"></i>
                     </div>
                     <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 1rem;">Complimentary Shipping</h3>
-                    <p style="color: var(--text-secondary);">Free worldwide shipping on all orders over $500</p>
+                    <p style="color: var(--text-secondary);">Free worldwide shipping on all orders over ₹500</p>
                 </div>
 
                 <div class="product-card" style="text-align: center; padding: 3rem 2rem;">
@@ -146,7 +177,7 @@
                 <p>Subscribe for exclusive offers</p>
                 <form style="display: flex; gap: 0.5rem; margin-top: 1rem;" onsubmit="event.preventDefault(); utils.showNotification('Newsletter feature coming soon!', 'info');">
                     <input type="email" placeholder="Your email" style="flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); border-radius: var(--radius-full); color: var(--text-primary);">
-                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">→</button>
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">â†’</button>
                 </form>
             </div>
         </div>
@@ -160,222 +191,55 @@
 
     <script src="js/main.js"></script>
     <script>
-        // 15 Featured Products with reliable image links
-        const featuredProducts = [
-            {
-                id: 1,
-                name: "Italian Leather Tote",
-                category: "Leather Collection",
-                price: 899,
-                old_price: 1299,
-                image: "https://images.unsplash.com/photo-1584917865448-de89fe76cc2b?w=600&auto=format",
-                badge: "BEST SELLER",
-                rating: 5,
-                description: "Handcrafted in Florence with premium Italian leather."
-            },
-            {
-                id: 2,
-                name: "Vintage Leather Satchel",
-                category: "Leather Collection",
-                price: 749,
-                old_price: 999,
-                image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format",
-                badge: "SALE",
-                rating: 4,
-                description: "Classic vintage design with solid brass hardware."
-            },
-            {
-                id: 3,
-                name: "Oxford Leather Briefcase",
-                category: "Business",
-                price: 1299,
-                old_price: 1699,
-                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
-                badge: "PREMIUM",
-                rating: 5,
-                description: "Professional elegance with padded laptop compartment."
-            },
-            {
-                id: 4,
-                name: "Evening Crystal Clutch",
-                category: "Evening",
-                price: 1299,
-                old_price: 1899,
-                image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&auto=format",
-                badge: "LUXURY",
-                rating: 5,
-                description: "Hand-set with Swarovski crystals for special occasions."
-            },
-            {
-                id: 5,
-                name: "Designer Shoulder Bag",
-                category: "Handbags",
-                price: 1599,
-                old_price: 2199,
-                image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&auto=format",
-                badge: "EXCLUSIVE",
-                rating: 5,
-                description: "Signature gold hardware and multiple compartments."
-            },
-            {
-                id: 6,
-                name: "Quilted Chain Handbag",
-                category: "Handbags",
-                price: 1899,
-                old_price: 2499,
-                image: "https://images.unsplash.com/photo-1584917865448-de89fe76cc2b?w=600&auto=format",
-                badge: "SIGNATURE",
-                rating: 5,
-                description: "Diamond stitching and signature chain strap."
-            },
-            {
-                id: 7,
-                name: "Structured Top Handle Bag",
-                category: "Handbags",
-                price: 999,
-                old_price: 1399,
-                image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format",
-                badge: "NEW",
-                rating: 4,
-                description: "Premium calfskin leather with rigid top handle."
-            },
-            {
-                id: 8,
-                name: "Convertible Hobo Bag",
-                category: "Handbags",
-                price: 699,
-                old_price: 949,
-                image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&auto=format",
-                badge: "VERSATILE",
-                rating: 5,
-                description: "Wear as shoulder bag, crossbody, or clutch."
-            },
-            {
-                id: 9,
-                name: "Mini Chain Crossbody",
-                category: "Handbags",
-                price: 449,
-                old_price: 599,
-                image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&auto=format",
-                badge: "TRENDING",
-                rating: 4,
-                description: "Mini crossbody with detachable chain strap."
-            },
-            {
-                id: 10,
-                name: "Premium Travel Backpack",
-                category: "Backpacks",
-                price: 599,
-                old_price: 799,
-                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
-                badge: "TRAVEL PRO",
-                rating: 5,
-                description: "USB charging port and RFID-blocking pockets."
-            },
-            {
-                id: 11,
-                name: "Laptop Backpack",
-                category: "Backpacks",
-                price: 399,
-                old_price: 549,
-                image: "https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format",
-                badge: "BEST SELLER",
-                rating: 5,
-                description: "Padded compartment for up to 15-inch laptops."
-            },
-            {
-                id: 12,
-                name: "Canvas Backpack",
-                category: "Backpacks",
-                price: 299,
-                old_price: 399,
-                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
-                badge: "CASUAL",
-                rating: 4,
-                description: "Heavy-duty waxed canvas with leather accents."
-            },
-            {
-                id: 13,
-                name: "Vintage Leather Backpack",
-                category: "Backpacks",
-                price: 699,
-                old_price: 899,
-                image: "https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format",
-                badge: "PREMIUM",
-                rating: 5,
-                description: "Full-grain leather that develops beautiful patina."
-            },
-            {
-                id: 14,
-                name: "Weekender Duffle Bag",
-                category: "Travel",
-                price: 1099,
-                old_price: 1499,
-                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format",
-                badge: "LIMITED",
-                rating: 5,
-                description: "Water-resistant leather with multiple compartments."
-            },
-            {
-                id: 15,
-                name: "Leather Crossbody Bag",
-                category: "Handbags",
-                price: 449,
-                old_price: 599,
-                image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&auto=format",
-                badge: "POPULAR",
-                rating: 5,
-                description: "Soft, supple leather with adjustable strap."
-            }
-        ];
-
-        // Display featured products
         document.addEventListener('DOMContentLoaded', () => {
-            const featuredContainer = document.getElementById('featuredProducts');
-            if (featuredContainer) {
-                featuredContainer.innerHTML = featuredProducts.map(product => `
-                    <div class="product-card">
-                        <div class="product-image-container">
-                            <img src="${product.image}" alt="${product.name}" class="product-image" onclick="utils.viewProduct(${product.id})" loading="lazy">
-                            ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-                            <div class="product-overlay">
-                                <button class="overlay-btn" onclick="utils.addToWishlist(${JSON.stringify(product).replace(/"/g, '&quot;')})">
-                                    <i class="fas fa-heart"></i>
-                                </button>
-                                <button class="overlay-btn" onclick="utils.viewProduct(${product.id})">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">${product.category}</div>
-                            <h3 class="product-name" onclick="utils.viewProduct(${product.id})">${product.name}</h3>
-                            <div class="product-rating">
-                                ${Array(5).fill(0).map((_, i) => 
-                                    `<i class="fas fa-star ${i < product.rating ? '' : 'empty'}"></i>`
-                                ).join('')}
-                            </div>
-                            <div class="product-price-row">
-                                <span class="product-price">$${product.price}</span>
-                                ${product.old_price ? `<span class="product-old-price">$${product.old_price}</span>` : ''}
-                            </div>
-                            <p class="product-description">${product.description}</p>
-                            <button class="add-to-cart-btn" onclick="cart.addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
-                                ADD TO CART
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            // Update cart count
+            migrateLegacyData();
             updateCartCount();
         });
 
+        const FALLBACK_PRODUCT_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 900'%3E%3Crect width='900' height='900' fill='%231f2937'/%3E%3Crect x='225' y='300' width='450' height='360' rx='36' fill='%23c7a261'/%3E%3Cpath d='M330 300c0-80 50-130 120-130s120 50 120 130h-55c0-47-24-76-65-76s-65 29-65 76h-55z' fill='%23f8f1de'/%3E%3Ctext x='450' y='740' text-anchor='middle' fill='%23f8f1de' font-size='48' font-family='Arial,sans-serif'%3ELuxury%20Bag%3C/text%3E%3C/svg%3E";
+
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('user') || 'null');
+        }
+
+        function getUserStorageKey(baseKey, user = null) {
+            const activeUser = user || getCurrentUser();
+            if (!activeUser) return baseKey;
+            const identifier = activeUser.id || activeUser.email || activeUser.username;
+            return identifier ? `${baseKey}_${identifier}` : baseKey;
+        }
+
+        function readUserList(baseKey) {
+            return JSON.parse(localStorage.getItem(getUserStorageKey(baseKey)) || '[]');
+        }
+
+        function writeUserList(baseKey, value) {
+            localStorage.setItem(getUserStorageKey(baseKey), JSON.stringify(value));
+        }
+
+        function migrateLegacyData() {
+            const user = getCurrentUser();
+            if (!user) return;
+            ['cart', 'wishlist', 'orders'].forEach(baseKey => {
+                const scopedKey = getUserStorageKey(baseKey, user);
+                if (scopedKey === baseKey) return;
+                if (!localStorage.getItem(scopedKey) && localStorage.getItem(baseKey)) {
+                    localStorage.setItem(scopedKey, localStorage.getItem(baseKey));
+                    localStorage.removeItem(baseKey);
+                }
+            });
+        }
+
+        function handleProductImageError(imageElement) {
+            imageElement.onerror = null;
+            imageElement.src = FALLBACK_PRODUCT_IMAGE;
+        }
+
         // Cart count function (if not in main.js)
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            const count = window.cart && typeof window.cart.getCartCount === 'function'
+                ? window.cart.getCartCount()
+                : readUserList('cart').reduce((sum, item) => sum + (item.quantity || 1), 0);
             document.querySelectorAll('.cart-count').forEach(el => {
                 el.textContent = count;
             });
@@ -383,39 +247,54 @@
 
         // Add to utils if not exists
         window.utils = window.utils || {};
-        window.utils.viewProduct = function(productId) {
+        window.utils.viewProduct = window.utils.viewProduct || function(productId) {
             window.location.href = `product-detail.html?id=${productId}`;
         };
-        
+
+        window.utils.showNotification = window.utils.showNotification || showNotification;
+
+        const baseAddToWishlist = typeof window.utils.addToWishlist === 'function'
+            ? window.utils.addToWishlist
+            : null;
+
         window.utils.addToWishlist = function(product) {
-            let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            if (baseAddToWishlist) {
+                return baseAddToWishlist(product);
+            }
+
+            let wishlist = readUserList('wishlist');
             if (!wishlist.some(item => item.id === product.id)) {
                 wishlist.push(product);
-                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                writeUserList('wishlist', wishlist);
                 showNotification('Added to wishlist!', 'success');
-            } else {
-                showNotification('Already in wishlist!', 'info');
+                return true;
             }
-        };
-        
-        window.utils.showNotification = function(message, type) {
-            // Simple alert for demo - replace with your notification system
-            alert(message);
+
+            showNotification('Already in wishlist!', 'info');
+            return false;
         };
 
         // Cart functions
+        const baseAddToCart = window.cart && typeof window.cart.addToCart === 'function'
+            ? window.cart.addToCart
+            : null;
+
         window.cart = window.cart || {};
         window.cart.addToCart = function(product) {
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const existingItem = cart.find(item => item.id === product.id);
-            
+            if (baseAddToCart) {
+                return baseAddToCart(product, 1);
+            }
+
+            let fallbackCart = readUserList('cart');
+            const existingItem = fallbackCart.find(item => item.id === product.id);
+
             if (existingItem) {
                 existingItem.quantity = (existingItem.quantity || 1) + 1;
             } else {
-                cart.push({...product, quantity: 1});
+                fallbackCart.push({...product, quantity: 1});
             }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
+
+            writeUserList('cart', fallbackCart);
             updateCartCount();
             showNotification('Added to cart!', 'success');
         };
@@ -479,3 +358,4 @@
     </script>
 </body>
 </html>
+

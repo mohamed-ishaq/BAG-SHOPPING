@@ -171,11 +171,6 @@
             
             // Update cart count
             updateCartCount();
-            
-            // Check if user is already logged in
-            if (localStorage.getItem('token')) {
-                window.location.href = 'index.html';
-            }
         });
 
         // ============================================
@@ -207,8 +202,26 @@
             return re.test(email);
         }
 
+        function getUserStorageKey(baseKey, user = null) {
+            const activeUser = user || JSON.parse(localStorage.getItem('user') || 'null');
+            if (!activeUser) return baseKey;
+            const identifier = activeUser.id || activeUser.email || activeUser.username;
+            return identifier ? `${baseKey}_${identifier}` : baseKey;
+        }
+
+        function migrateLegacyUserData(user) {
+            ['cart', 'wishlist', 'orders'].forEach(baseKey => {
+                const scopedKey = getUserStorageKey(baseKey, user);
+                if (scopedKey === baseKey) return;
+                if (!localStorage.getItem(scopedKey) && localStorage.getItem(baseKey)) {
+                    localStorage.setItem(scopedKey, localStorage.getItem(baseKey));
+                    localStorage.removeItem(baseKey);
+                }
+            });
+        }
+
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cart = JSON.parse(localStorage.getItem(getUserStorageKey('cart')) || '[]');
             const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
             document.querySelectorAll('.cart-count').forEach(el => {
                 el.textContent = count;
@@ -259,6 +272,7 @@
                 // Store auth data
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
+                migrateLegacyUserData(data.user);
                 
                 // Show success message
                 showAlert(successEl, 'Login successful! Redirecting...', 'success');
@@ -347,6 +361,7 @@
                 // Store auth data
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
+                migrateLegacyUserData(data.user);
                 
                 // Show success message
                 showAlert(successEl, 'Registration successful! Redirecting...', 'success');

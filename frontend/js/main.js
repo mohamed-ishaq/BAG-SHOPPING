@@ -1,23 +1,77 @@
-// ============================================
+﻿// ============================================
 // LUXURY BAGS - MASTER JAVASCRIPT
-// Complete Integrated Functionality
 // ============================================
 
 const API_URL = 'http://localhost:3000/api';
 
-// ============================================
-// GLOBAL STATE
-// ============================================
 let currentUser = null;
 let cart = [];
+const APP_FALLBACK_PRODUCT_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 900'%3E%3Crect width='900' height='900' fill='%231f2937'/%3E%3Crect x='225' y='300' width='450' height='360' rx='36' fill='%23c7a261'/%3E%3Cpath d='M330 300c0-80 50-130 120-130s120 50 120 130h-55c0-47-24-76-65-76s-65 29-65 76h-55z' fill='%23f8f1de'/%3E%3Ctext x='450' y='740' text-anchor='middle' fill='%23f8f1de' font-size='48' font-family='Arial,sans-serif'%3ELuxury%20Bag%3C/text%3E%3C/svg%3E";
+
+function safeParseJSON(value, fallback = null) {
+    try {
+        return JSON.parse(value);
+    } catch (error) {
+        return fallback;
+    }
+}
+
+function getStoredUser() {
+    return safeParseJSON(localStorage.getItem('user'), null);
+}
+
+function getUserIdentifier(user = currentUser) {
+    if (!user) return null;
+    return user.id || user.email || user.username || null;
+}
+
+function getScopedKey(baseKey, user = currentUser) {
+    const identifier = getUserIdentifier(user);
+    return identifier ? `${baseKey}_${identifier}` : baseKey;
+}
+
+function readArrayByKey(key) {
+    return safeParseJSON(localStorage.getItem(key), []) || [];
+}
+
+function writeArrayByKey(key, value) {
+    localStorage.setItem(key, JSON.stringify(Array.isArray(value) ? value : []));
+}
+
+function migrateLegacyArray(baseKey, user = currentUser) {
+    const scopedKey = getScopedKey(baseKey, user);
+    if (scopedKey === baseKey) return;
+    if (localStorage.getItem(scopedKey)) return;
+
+    const legacyValue = localStorage.getItem(baseKey);
+    if (legacyValue) {
+        localStorage.setItem(scopedKey, legacyValue);
+        localStorage.removeItem(baseKey);
+    }
+}
+
+function migrateUserData(user = currentUser) {
+    if (!user) return;
+    ['cart', 'wishlist', 'orders'].forEach((key) => migrateLegacyArray(key, user));
+}
+
+function getUserCartKey() {
+    return getScopedKey('cart');
+}
+
+function getUserWishlistKey() {
+    return getScopedKey('wishlist');
+}
+
+function getUserOrdersKey() {
+    return getScopedKey('orders');
+}
 
 // ============================================
 // INITIALIZATION
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Luxury Bags initialized');
     checkAuthStatus();
-    loadCart();
     createParticles();
     setupNavbarScroll();
     updateCartCount();
@@ -28,36 +82,37 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================
 function checkAuthStatus() {
     const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    
+    const userData = getStoredUser();
+
     if (token && userData) {
-        try {
-            currentUser = JSON.parse(userData);
-            updateUIForLoggedInUser();
-        } catch (error) {
-            console.error('Error parsing user data:', error);
-            logout();
-        }
+        currentUser = userData;
+        migrateUserData(currentUser);
+        loadCart();
+        updateUIForLoggedInUser();
     } else {
+        currentUser = null;
+        cart = [];
         updateUIForLoggedOutUser();
     }
 }
 
 function updateUIForLoggedInUser() {
-    const loginLinks = document.querySelectorAll('.login-link');
-    const logoutLinks = document.querySelectorAll('.logout-link');
-    const profileLinks = document.querySelectorAll('.profile-link');
+    document.querySelectorAll('.login-link').forEach((link) => {
+        link.style.display = 'none';
+    });
+    document.querySelectorAll('.logout-link').forEach((link) => {
+        link.style.display = 'inline-block';
+    });
+    document.querySelectorAll('.profile-link').forEach((link) => {
+        link.style.display = 'inline-block';
+    });
+
     const welcomeMessage = document.getElementById('welcomeMessage');
-    const authLinks = document.querySelector('.auth-links');
-    
-    loginLinks.forEach(link => link.style.display = 'none');
-    logoutLinks.forEach(link => link.style.display = 'inline-block');
-    profileLinks.forEach(link => link.style.display = 'inline-block');
-    
     if (welcomeMessage) {
         welcomeMessage.innerHTML = `<i class="fas fa-crown"></i> Welcome back, ${currentUser?.full_name || currentUser?.username || 'Valued Customer'}!`;
     }
-    
+
+    const authLinks = document.querySelector('.auth-links');
     if (authLinks) {
         authLinks.innerHTML = `
             <a href="dashboard.html" class="profile-link"><i class="fas fa-user"></i> Dashboard</a>
@@ -67,20 +122,22 @@ function updateUIForLoggedInUser() {
 }
 
 function updateUIForLoggedOutUser() {
-    const loginLinks = document.querySelectorAll('.login-link');
-    const logoutLinks = document.querySelectorAll('.logout-link');
-    const profileLinks = document.querySelectorAll('.profile-link');
+    document.querySelectorAll('.login-link').forEach((link) => {
+        link.style.display = 'inline-block';
+    });
+    document.querySelectorAll('.logout-link').forEach((link) => {
+        link.style.display = 'none';
+    });
+    document.querySelectorAll('.profile-link').forEach((link) => {
+        link.style.display = 'none';
+    });
+
     const welcomeMessage = document.getElementById('welcomeMessage');
-    const authLinks = document.querySelector('.auth-links');
-    
-    loginLinks.forEach(link => link.style.display = 'inline-block');
-    logoutLinks.forEach(link => link.style.display = 'none');
-    profileLinks.forEach(link => link.style.display = 'none');
-    
     if (welcomeMessage) {
         welcomeMessage.innerHTML = '<i class="fas fa-crown"></i> Welcome to Luxury Bags';
     }
-    
+
+    const authLinks = document.querySelector('.auth-links');
     if (authLinks) {
         authLinks.innerHTML = `
             <a href="login.html" class="login-link"><i class="fas fa-sign-in-alt"></i> Sign In</a>
@@ -92,13 +149,11 @@ function updateUIForLoggedOutUser() {
 async function login(email, password) {
     try {
         showLoading(true);
-        
-        const response = await fetch(`${API_URL}/auth/login`, {
+        const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
-
         const data = await response.json();
 
         if (!response.ok) {
@@ -108,17 +163,18 @@ async function login(email, password) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         currentUser = data.user;
-
+        migrateUserData(currentUser);
+        loadCart();
+        updateUIForLoggedInUser();
         showNotification('Login successful! Redirecting...', 'success');
-        
+
         setTimeout(() => {
             const redirectUrl = sessionStorage.getItem('redirectAfterLogin') || 'index.html';
             sessionStorage.removeItem('redirectAfterLogin');
             window.location.href = redirectUrl;
-        }, 1500);
-
+        }, 1200);
     } catch (error) {
-        showNotification(error.message, 'error');
+        showNotification(error.message || 'Login failed', 'error');
     } finally {
         showLoading(false);
     }
@@ -127,13 +183,11 @@ async function login(email, password) {
 async function register(userData) {
     try {
         showLoading(true);
-        
-        const response = await fetch(`${API_URL}/auth/register`, {
+        const response = await fetch(`${API_URL}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(userData)
         });
-
         const data = await response.json();
 
         if (!response.ok) {
@@ -143,15 +197,16 @@ async function register(userData) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         currentUser = data.user;
-
+        migrateUserData(currentUser);
+        loadCart();
+        updateUIForLoggedInUser();
         showNotification('Registration successful! Redirecting...', 'success');
-        
+
         setTimeout(() => {
             window.location.href = 'index.html';
-        }, 1500);
-
+        }, 1200);
     } catch (error) {
-        showNotification(error.message, 'error');
+        showNotification(error.message || 'Registration failed', 'error');
     } finally {
         showLoading(false);
     }
@@ -160,27 +215,24 @@ async function register(userData) {
 function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.removeItem('cart');
     currentUser = null;
     cart = [];
-    
+
     updateUIForLoggedOutUser();
     updateCartCount();
-    
     showNotification('Logged out successfully', 'success');
-    
-    const protectedPages = ['cart.html', 'checkout.html', 'dashboard.html', 'profile.html'];
+
+    const protectedPages = ['cart.html', 'checkout.html', 'dashboard.html', 'orders.html'];
     const currentPage = window.location.pathname.split('/').pop();
-    
     if (protectedPages.includes(currentPage)) {
         setTimeout(() => {
             window.location.href = 'index.html';
-        }, 1500);
+        }, 900);
     }
 }
 
 function isAuthenticated() {
-    return !!localStorage.getItem('token');
+    return Boolean(localStorage.getItem('token') && getStoredUser());
 }
 
 function requireAuth() {
@@ -193,69 +245,70 @@ function requireAuth() {
 }
 
 // ============================================
-// CART MANAGEMENT
+// CART
 // ============================================
 function loadCart() {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-        try {
-            cart = JSON.parse(savedCart);
-        } catch (error) {
-            console.error('Error parsing cart:', error);
-            cart = [];
-        }
+    if (!currentUser) {
+        cart = [];
+        updateCartCount();
+        return;
     }
+    cart = readArrayByKey(getUserCartKey());
     updateCartCount();
 }
 
 function saveCart() {
-    localStorage.setItem('cart', JSON.stringify(cart));
+    if (!currentUser) return;
+    writeArrayByKey(getUserCartKey(), cart);
     updateCartCount();
 }
 
 function addToCart(product, quantity = 1) {
-    if (!isAuthenticated()) {
-        sessionStorage.setItem('redirectAfterLogin', window.location.href);
-        showNotification('Please login to add items to cart', 'warning');
-        setTimeout(() => window.location.href = 'login.html', 1500);
-        return;
-    }
+    if (!requireAuth()) return;
 
-    const existingItem = cart.find(item => item.id === product.id);
-    
+    const normalizedQuantity = Number(quantity) > 0 ? Number(quantity) : 1;
+    const selectedColor = product.color || 'Default';
+    const existingItem = cart.find(
+        (item) => item.id === product.id && (item.color || 'Default') === selectedColor
+    );
+
     if (existingItem) {
-        existingItem.quantity += quantity;
+        existingItem.quantity = (existingItem.quantity || 1) + normalizedQuantity;
     } else {
         cart.push({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.image,
-            quantity: quantity,
-            stock: product.stock || 10
+            ...product,
+            image: product.image || product.image_url || APP_FALLBACK_PRODUCT_IMAGE,
+            quantity: normalizedQuantity,
+            color: selectedColor
         });
     }
-    
+
     saveCart();
     showNotification(`${product.name} added to cart!`, 'success');
 }
 
-function removeFromCart(productId) {
-    cart = cart.filter(item => item.id !== productId);
+function removeFromCart(productId, color = null) {
+    cart = cart.filter((item) => {
+        if (item.id !== productId) return true;
+        if (color === null) return false;
+        return (item.color || 'Default') !== color;
+    });
     saveCart();
     showNotification('Item removed from cart', 'success');
 }
 
-function updateCartQuantity(productId, newQuantity) {
-    const item = cart.find(item => item.id === productId);
-    if (item) {
-        if (newQuantity <= 0) {
-            removeFromCart(productId);
-        } else {
-            item.quantity = newQuantity;
-            saveCart();
-        }
+function updateCartQuantity(productId, newQuantity, color = null) {
+    const qty = Number(newQuantity);
+    const item = cart.find(
+        (entry) => entry.id === productId && (color === null || (entry.color || 'Default') === color)
+    );
+    if (!item) return;
+    if (qty <= 0) {
+        removeFromCart(productId, color);
+        return;
     }
+    item.quantity = qty;
+    saveCart();
 }
 
 function clearCart() {
@@ -265,18 +318,66 @@ function clearCart() {
 }
 
 function getCartTotal() {
-    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 1), 0);
 }
 
 function getCartCount() {
-    return cart.reduce((sum, item) => sum + item.quantity, 0);
+    return cart.reduce((sum, item) => sum + Number(item.quantity || 1), 0);
 }
 
 function updateCartCount() {
     const count = getCartCount();
-    document.querySelectorAll('.cart-count').forEach(el => {
-        el.textContent = count;
+    document.querySelectorAll('.cart-count').forEach((el) => {
+        el.textContent = String(count);
     });
+}
+
+// ============================================
+// WISHLIST + ORDERS STORAGE
+// ============================================
+function getWishlist() {
+    return readArrayByKey(getUserWishlistKey());
+}
+
+function setWishlist(items) {
+    writeArrayByKey(getUserWishlistKey(), items);
+}
+
+function addToWishlist(product) {
+    if (!requireAuth()) return false;
+    const wishlist = getWishlist();
+    if (wishlist.some((item) => item.id === product.id)) {
+        showNotification('Already in wishlist', 'info');
+        return false;
+    }
+    wishlist.push({
+        ...product,
+        image: product.image || product.image_url || APP_FALLBACK_PRODUCT_IMAGE
+    });
+    setWishlist(wishlist);
+    showNotification('Added to wishlist!', 'success');
+    return true;
+}
+
+function removeFromWishlist(productId) {
+    if (!requireAuth()) return;
+    const wishlist = getWishlist().filter((item) => item.id !== productId);
+    setWishlist(wishlist);
+    showNotification('Removed from wishlist', 'success');
+}
+
+function getOrders() {
+    return readArrayByKey(getUserOrdersKey());
+}
+
+function setOrders(orders) {
+    writeArrayByKey(getUserOrdersKey(), orders);
+}
+
+function appendOrder(order) {
+    const orders = getOrders();
+    orders.push(order);
+    setOrders(orders);
 }
 
 // ============================================
@@ -285,25 +386,25 @@ function updateCartCount() {
 function createParticles() {
     const particlesContainer = document.getElementById('particles');
     if (!particlesContainer) return;
-    
+
     particlesContainer.innerHTML = '';
-    
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 30; i += 1) {
         const particle = document.createElement('div');
         particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 20 + 's';
-        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 20}s`;
+        particle.style.animationDuration = `${15 + Math.random() * 10}s`;
         particlesContainer.appendChild(particle);
     }
 }
 
 function setupNavbarScroll() {
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', () => {
         const navbar = document.getElementById('navbar');
-        if (navbar && window.scrollY > 50) {
+        if (!navbar) return;
+        if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
-        } else if (navbar) {
+        } else {
             navbar.classList.remove('scrolled');
         }
     });
@@ -311,63 +412,42 @@ function setupNavbarScroll() {
 
 function showLoading(show = true) {
     const spinner = document.getElementById('loadingSpinner');
-    if (spinner) {
-        spinner.style.display = show ? 'block' : 'none';
-    }
+    if (spinner) spinner.style.display = show ? 'block' : 'none';
 }
 
 function showNotification(message, type = 'info', duration = 3000) {
     const notification = document.createElement('div');
     notification.className = `alert alert-${type}`;
-    
     let icon = 'info-circle';
     if (type === 'success') icon = 'check-circle';
     if (type === 'error') icon = 'exclamation-circle';
     if (type === 'warning') icon = 'exclamation-triangle';
-    
-    notification.innerHTML = `
-        <i class="fas fa-${icon}"></i>
-        <span>${message}</span>
-    `;
-    
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        z-index: 9999;
-        min-width: 300px;
-        animation: slideIn 0.3s ease;
-    `;
-    
+
+    notification.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span>`;
+    notification.style.cssText = 'position: fixed; top: 100px; right: 20px; z-index: 9999; min-width: 300px;';
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
+        notification.remove();
     }, duration);
 }
 
 function formatPrice(price) {
-    return '$' + parseFloat(price).toFixed(2);
+    return `₹${Number(price || 0).toFixed(2)}`;
 }
 
-// ============================================
-// PRODUCT FUNCTIONS
-// ============================================
 async function loadProducts(filters = {}) {
     try {
         showLoading(true);
-        
-        let url = `${API_URL}/products?`;
         const params = new URLSearchParams(filters);
-        url += params.toString();
-        
-        const response = await fetch(url);
-        const products = await response.json();
-        
-        return products;
+        const response = await fetch(`${API_URL}/products?${params.toString()}`);
+        const data = await response.json();
+        if (!Array.isArray(data)) return data;
+        return data.filter((product) => {
+            const image = product?.image || product?.image_url;
+            return typeof image === 'string' && image.trim() !== '';
+        });
     } catch (error) {
-        console.error('Error loading products:', error);
         showNotification('Failed to load products', 'error');
         return [];
     } finally {
@@ -380,40 +460,7 @@ function viewProduct(productId) {
 }
 
 // ============================================
-// WISHLIST FUNCTIONS
-// ============================================
-function getWishlist() {
-    return JSON.parse(localStorage.getItem('wishlist') || '[]');
-}
-
-function addToWishlist(product) {
-    let wishlist = getWishlist();
-    
-    if (!wishlist.some(item => item.id === product.id)) {
-        wishlist.push({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.image
-        });
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
-        showNotification('Added to wishlist!', 'success');
-        return true;
-    } else {
-        showNotification('Already in wishlist', 'info');
-        return false;
-    }
-}
-
-function removeFromWishlist(productId) {
-    let wishlist = getWishlist();
-    wishlist = wishlist.filter(item => item.id !== productId);
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    showNotification('Removed from wishlist', 'success');
-}
-
-// ============================================
-// EXPORT GLOBAL FUNCTIONS
+// EXPORTS
 // ============================================
 window.auth = {
     login,
@@ -429,9 +476,10 @@ window.cart = {
     removeFromCart,
     updateCartQuantity,
     clearCart,
-    getCart: () => cart,
+    getCart: () => [...cart],
     getCartTotal,
-    getCartCount
+    getCartCount,
+    loadCart
 };
 
 window.utils = {
@@ -443,13 +491,17 @@ window.utils = {
     removeFromWishlist,
     getWishlist
 };
-// Add to utils object in main.js
-const utils = {
-    // ... existing utils functions ...
-    
-    viewProduct: function(productId) {
-        window.location.href = `product-detail.html?id=${productId}`;
-    },
-    
-    // ... rest of utils functions ...
+
+window.appStorage = {
+    getUserIdentifier: () => getUserIdentifier(),
+    getScopedKey,
+    getUserCartKey,
+    getUserWishlistKey,
+    getUserOrdersKey,
+    getOrders,
+    setOrders,
+    appendOrder,
+    migrateUserData
 };
+
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -127,7 +127,7 @@
                                 <i class="fas fa-truck"></i>
                                 <div>
                                     <h4>Free Shipping</h4>
-                                    <p>On orders over $500</p>
+                                    <p>On orders over ₹500</p>
                                 </div>
                             </div>
                             <div class="info-item">
@@ -197,11 +197,11 @@
                     <div class="tab-content" id="shippingTab">
                         <div class="shipping-content">
                             <h3>Shipping Information</h3>
-                            <p>Free standard shipping on all orders over $500. Orders under $500 incur a flat rate of $10.</p>
-                            <p>Express shipping available for $25 - 1-2 business days</p>
+                            <p>Free standard shipping on all orders over ₹500. Orders under ₹500 incur a flat rate of ₹10.</p>
+                            <p>Express shipping available for ₹25 - 1-2 business days</p>
                             
                             <h3>Returns Policy</h3>
-                            <p>We offer a 30-day return policy for unworn items in original condition with tags attached. Return shipping is free for exchanges, or a flat $10 fee will be deducted from your refund.</p>
+                            <p>We offer a 30-day return policy for unworn items in original condition with tags attached. Return shipping is free for exchanges, or a flat ₹10 fee will be deducted from your refund.</p>
                             
                             <h3>International Shipping</h3>
                             <p>We ship worldwide. International customers are responsible for any customs fees or import duties.</p>
@@ -294,7 +294,7 @@
                     <div class="cod-info">
                         <i class="fas fa-truck" style="font-size: 3rem; color: var(--accent-gold);"></i>
                         <p>Pay with cash when your order is delivered.</p>
-                        <p class="note">Please have exact change ready. Delivery driver can provide change up to $20.</p>
+                        <p class="note">Please have exact change ready. Delivery driver can provide change up to ₹20.</p>
                     </div>
                 </div>
 
@@ -335,19 +335,19 @@
                 <div class="payment-total">
                     <div class="total-row">
                         <span>Subtotal:</span>
-                        <span id="paymentSubtotal">$0</span>
+                        <span id="paymentSubtotal">₹0</span>
                     </div>
                     <div class="total-row">
                         <span>Shipping:</span>
-                        <span id="paymentShipping">$10.00</span>
+                        <span id="paymentShipping">₹10.00</span>
                     </div>
                     <div class="total-row">
                         <span>Tax (10%):</span>
-                        <span id="paymentTax">$0</span>
+                        <span id="paymentTax">₹0</span>
                     </div>
                     <div class="total-row grand-total">
                         <span>Total:</span>
-                        <span id="paymentTotal">$0</span>
+                        <span id="paymentTotal">₹0</span>
                     </div>
                 </div>
             </div>
@@ -396,7 +396,7 @@
                 <p>Subscribe for exclusive offers</p>
                 <form style="display: flex; gap: 0.5rem; margin-top: 1rem;" onsubmit="event.preventDefault(); showNotification('Newsletter feature coming soon!', 'info');">
                     <input type="email" placeholder="Your email" style="flex: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); border-radius: var(--radius-full); color: var(--text-primary);">
-                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">→</button>
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">â†’</button>
                 </form>
             </div>
         </div>
@@ -1117,7 +1117,7 @@
                 rating: 5,
                 review_count: 7,
                 description: "Hand-set with Swarovski crystals for special occasions. Makes a stunning statement for galas and formal events.",
-                full_description: "The Evening Crystal Clutch is a masterpiece of craftsmanship, featuring hundreds of hand-set Swarovski crystals that catch the light from every angle. Each crystal is individually placed by skilled artisans to create a dazzling pattern that ensures you'll shine at any formal event. The interior is lined with luxurious satin and includes a small mirror for touch-ups. This clutch is more than an accessory—it's a work of art.",
+                full_description: "The Evening Crystal Clutch is a masterpiece of craftsmanship, featuring hundreds of hand-set Swarovski crystals that catch the light from every angle. Each crystal is individually placed by skilled artisans to create a dazzling pattern that ensures you'll shine at any formal event. The interior is lined with luxurious satin and includes a small mirror for touch-ups. This clutch is more than an accessoryâ€”it's a work of art.",
                 features: [
                     "Hand-set Swarovski crystals",
                     "Crystal-encrusted design",
@@ -1330,11 +1330,50 @@
                     }
                 ]
             }
-        ];
+        ].filter((product) => typeof product.image === 'string' && product.image.trim() !== '');
 
         let currentProduct = null;
         let selectedColor = 'Brown';
         const taxRate = 0.1;
+        const FALLBACK_PRODUCT_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 900'%3E%3Crect width='900' height='900' fill='%231f2937'/%3E%3Crect x='225' y='300' width='450' height='360' rx='36' fill='%23c7a261'/%3E%3Cpath d='M330 300c0-80 50-130 120-130s120 50 120 130h-55c0-47-24-76-65-76s-65 29-65 76h-55z' fill='%23f8f1de'/%3E%3Ctext x='450' y='740' text-anchor='middle' fill='%23f8f1de' font-size='48' font-family='Arial,sans-serif'%3ELuxury%20Bag%3C/text%3E%3C/svg%3E";
+
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('user') || 'null');
+        }
+
+        function getUserStorageKey(baseKey, user = null) {
+            const activeUser = user || getCurrentUser();
+            if (!activeUser) return baseKey;
+            const identifier = activeUser.id || activeUser.email || activeUser.username;
+            return identifier ? `${baseKey}_${identifier}` : baseKey;
+        }
+
+        function readUserArray(baseKey) {
+            return JSON.parse(localStorage.getItem(getUserStorageKey(baseKey)) || '[]');
+        }
+
+        function writeUserArray(baseKey, value) {
+            localStorage.setItem(getUserStorageKey(baseKey), JSON.stringify(value));
+        }
+
+        function migrateLegacyData() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            ['cart', 'wishlist', 'orders'].forEach(baseKey => {
+                const scopedKey = getUserStorageKey(baseKey, user);
+                if (scopedKey === baseKey) return;
+                if (!localStorage.getItem(scopedKey) && localStorage.getItem(baseKey)) {
+                    localStorage.setItem(scopedKey, localStorage.getItem(baseKey));
+                    localStorage.removeItem(baseKey);
+                }
+            });
+        }
+
+        function handleProductImageError(imageElement) {
+            imageElement.onerror = null;
+            imageElement.src = FALLBACK_PRODUCT_IMAGE;
+        }
 
         // Get product ID from URL
         function getProductId() {
@@ -1374,16 +1413,18 @@
 
         // Display product details
         function displayProductDetails(product) {
-            document.getElementById('mainProductImage').src = product.image;
-            document.getElementById('mainProductImage').alt = product.name;
+            const mainImage = document.getElementById('mainProductImage');
+            mainImage.src = product.image;
+            mainImage.alt = product.name;
+            mainImage.onerror = function() { handleProductImageError(this); };
             document.getElementById('productName').textContent = product.name;
             document.getElementById('productCategory').textContent = product.category.charAt(0).toUpperCase() + product.category.slice(1);
             document.getElementById('productDescription').textContent = product.description;
             
             // Price display
-            document.getElementById('currentPrice').textContent = `$${product.price}`;
+            document.getElementById('currentPrice').textContent = `₹${product.price}`;
             if (product.old_price) {
-                document.getElementById('oldPrice').textContent = `$${product.old_price}`;
+                document.getElementById('oldPrice').textContent = `₹${product.old_price}`;
                 document.getElementById('oldPrice').style.display = 'inline';
                 const discount = Math.round(((product.old_price - product.price) / product.old_price) * 100);
                 document.getElementById('discountBadge').textContent = `-${discount}%`;
@@ -1463,10 +1504,10 @@
             // Generate thumbnails
             const thumbnails = document.getElementById('thumbnailImages');
             thumbnails.innerHTML = `
-                <img src="${product.image}" class="thumbnail active" onclick="changeMainImage('${product.image}', this)">
-                <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format" class="thumbnail" onclick="changeMainImage('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format', this)">
-                <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format" class="thumbnail" onclick="changeMainImage('https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format', this)">
-                <img src="https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format" class="thumbnail" onclick="changeMainImage('https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format', this)">
+                <img src="${product.image}" class="thumbnail active" onclick="changeMainImage('${product.image}', this)" onerror="handleProductImageError(this)">
+                <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format" class="thumbnail" onclick="changeMainImage('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format', this)" onerror="handleProductImageError(this)">
+                <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format" class="thumbnail" onclick="changeMainImage('https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format', this)" onerror="handleProductImageError(this)">
+                <img src="https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format" class="thumbnail" onclick="changeMainImage('https://images.unsplash.com/photo-1622560480605-d6c0c85758d7?w=600&auto=format', this)" onerror="handleProductImageError(this)">
             `;
         }
 
@@ -1496,13 +1537,13 @@
             container.innerHTML = related.map(product => `
                 <div class="product-card">
                     <div class="product-image-container">
-                        <img src="${product.image}" alt="${product.name}" class="product-image" onclick="viewProduct(${product.id})">
+                        <img src="${product.image}" alt="${product.name}" class="product-image" onclick="viewProduct(${product.id})" onerror="handleProductImageError(this)">
                         ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
                     </div>
                     <div class="product-info">
                         <h3 class="product-name" onclick="viewProduct(${product.id})">${product.name}</h3>
                         <div class="product-price-row">
-                            <span class="product-price">$${product.price}</span>
+                            <span class="product-price">₹${product.price}</span>
                         </div>
                         <button class="add-to-cart-btn" onclick="quickAddToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
                             ADD TO CART
@@ -1557,18 +1598,30 @@
 
         // Helper function to add product to cart
         function addToCartWithProduct(product) {
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            if (!isAuthenticated()) {
+                sessionStorage.setItem('redirectAfterLogin', window.location.href);
+                showNotification('Please sign in to add items to cart', 'info');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 900);
+                return;
+            }
+
+            let cart = readUserArray('cart');
             const existingItem = cart.find(item => item.id === product.id && item.color === product.color);
             
             if (existingItem) {
                 existingItem.quantity = (existingItem.quantity || 1) + (product.quantity || 1);
             } else {
-                cart.push(product);
+                cart.push({
+                    ...product,
+                    image: product.image || FALLBACK_PRODUCT_IMAGE
+                });
             }
             
-            localStorage.setItem('cart', JSON.stringify(cart));
+            writeUserArray('cart', cart);
             updateCartCount();
-            showNotification(`${product.quantity || 1} × ${product.name} added to cart!`, 'success');
+            showNotification(`${product.quantity || 1} x ${product.name} added to cart!`, 'success');
         }
 
         // Buy Now function
@@ -1599,20 +1652,20 @@
             // Display product details in modal
             document.getElementById('paymentProductDetails').innerHTML = `
                 <div class="modal-product">
-                    <img src="${product.image}" alt="${product.name}" class="modal-product-image">
+                    <img src="${product.image}" alt="${product.name}" class="modal-product-image" onerror="handleProductImageError(this)">
                     <div class="modal-product-details">
                         <h4>${product.name}</h4>
                         <p>Color: ${product.color} | Quantity: ${product.quantity}</p>
-                        <p class="modal-product-price">$${product.price} each</p>
+                        <p class="modal-product-price">₹${product.price} each</p>
                     </div>
                 </div>
             `;
             
             // Update totals
-            document.getElementById('paymentSubtotal').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('paymentShipping').textContent = shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`;
-            document.getElementById('paymentTax').textContent = `$${tax.toFixed(2)}`;
-            document.getElementById('paymentTotal').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('paymentSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+            document.getElementById('paymentShipping').textContent = shipping === 0 ? 'Free' : `₹${shipping.toFixed(2)}`;
+            document.getElementById('paymentTax').textContent = `₹${tax.toFixed(2)}`;
+            document.getElementById('paymentTotal').textContent = `₹${total.toFixed(2)}`;
             
             // Store product for order
             modal.dataset.product = JSON.stringify(product);
@@ -1733,7 +1786,7 @@
                     },
                     paymentMethod: paymentMethod,
                     subtotal: product.price * product.quantity,
-                    shipping: product.price * product.quantity > 500 ? 0 : 10,
+                    shipping_cost: product.price * product.quantity > 500 ? 0 : 10,
                     tax: (product.price * product.quantity) * taxRate,
                     total: total,
                     status: 'processing',
@@ -1758,9 +1811,9 @@
 
         // Save order to localStorage
         function saveOrder(order) {
-            let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            let orders = readUserArray('orders');
             orders.push(order);
-            localStorage.setItem('orders', JSON.stringify(orders));
+            writeUserArray('orders', orders);
             
             // Also save to user's orders if logged in
             if (isAuthenticated()) {
@@ -1797,11 +1850,19 @@
         // Add to wishlist
         function addToWishlist() {
             if (!currentProduct) return;
+            if (!isAuthenticated()) {
+                sessionStorage.setItem('redirectAfterLogin', window.location.href);
+                window.location.href = 'login.html';
+                return;
+            }
             
-            let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            let wishlist = readUserArray('wishlist');
             if (!wishlist.some(item => item.id === currentProduct.id)) {
-                wishlist.push(currentProduct);
-                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                wishlist.push({
+                    ...currentProduct,
+                    image: currentProduct.image || FALLBACK_PRODUCT_IMAGE
+                });
+                writeUserArray('wishlist', wishlist);
                 showNotification('Added to wishlist!', 'success');
             } else {
                 showNotification('Already in wishlist!', 'info');
@@ -1826,7 +1887,7 @@
 
         // Update cart count
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cart = readUserArray('cart');
             const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
             document.querySelectorAll('.cart-count').forEach(el => {
                 el.textContent = count;
@@ -1835,7 +1896,16 @@
 
         // Check authentication
         function isAuthenticated() {
-            return !!localStorage.getItem('token');
+            return !!localStorage.getItem('token') && !!localStorage.getItem('user');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showNotification('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 900);
         }
 
         // Add modal styles
@@ -2079,6 +2149,7 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            migrateLegacyData();
             addModalStyles();
             loadProductDetails();
             updateCartCount();
@@ -2094,3 +2165,7 @@
     </script>
 </body>
 </html>
+
+
+
+
